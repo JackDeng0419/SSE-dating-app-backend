@@ -36,10 +36,21 @@ module.exports = appInfo => {
       host: '127.0.0.1',
       port: '3306',
       user: 'root',
-      password: 'pcmco001231',
+      password: 'password123',
       database: 'SSE-dating-app',
     },
   };
+
+  config.uuidInt = {
+    client: {
+      id: 0,
+      seed: 156015570,
+    },
+  };
+
+  config.bcrypt = {
+    saltRounds: 10 // default 10
+  }
 
   // add your user config here
   const userConfig = {

@@ -11,4 +11,14 @@ module.exports = {
     enable: true,
     package: 'egg-mysql',
   },
+
+  uuidInt: {
+    enable: true,
+    package: 'egg-uuid-int'
+  },
+
+  bcrypt: {
+    enable: true,
+    package: 'egg-bcrypt'
+  }
 };

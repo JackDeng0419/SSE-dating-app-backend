@@ -8,8 +8,10 @@
   },
   "dependencies": {
     "egg": "^2",
+    "egg-bcrypt": "^1.1.0",
     "egg-mysql": "^3.1.1",
-    "egg-scripts": "^2"
+    "egg-scripts": "^2",
+    "egg-uuid-int": "^2.0.2"
   },
   "devDependencies": {
     "autod": "^3",
