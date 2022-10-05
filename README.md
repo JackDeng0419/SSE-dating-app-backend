@@ -8,6 +8,12 @@
 
 see [egg docs][egg] for more detail.
 
+### Node version
+lts/erbium
+
+### MySQL version
+8.0.22
+
 ### Development
 
 ```bash
