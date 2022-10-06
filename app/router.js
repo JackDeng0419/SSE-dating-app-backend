@@ -9,6 +9,6 @@ module.exports = app => {
   router.get('/user_profile', controller.home.userProfile);
   router.post('/update_profile', controller.home.updateProfile);
 
-  router.get('/user', controller.home.user);
+  router.get('/validate_user', controller.home.validateUser);
   router.post('/add_user', controller.home.addUser);
 };

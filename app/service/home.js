@@ -6,13 +6,9 @@ class HomeService extends Service {
 
   async userProfile(id) {
     const { app } = this;
-    const QUERY_STR = id;
-    const row = {
-      where: { users_id: QUERY_STR }, // WHERE criteria
-    };
 
     try {
-      const result = await app.mysql.select('user_profiles', row);
+      const result = await app.mysql.get('user_profiles', { users_id: id });
       return result;
     } catch (error) {
       console.log(error);
@@ -58,13 +54,9 @@ class HomeService extends Service {
 
   async user(u_name) {
     const { app } = this;
-    const QUERY_STR = u_name;
-    const row = {
-      where: { username: QUERY_STR }, // WHERE criteria
-    };
 
     try {
-      const result = await app.mysql.select('users', row);
+      const result = await app.mysql.get('users', { username: u_name });
       return result;
     } catch (error) {
       console.log(error);
@@ -75,8 +67,25 @@ class HomeService extends Service {
   async addUser(u_name, em, pass) {
     const { app } = this;
     var result;
+    var check;
 
-    const row = {
+    // first we need to check if this user has been registered, either same username or email
+    const sql = `select * from users where username = ? or email = ?`;
+    try {
+      // By using placeholders, the malicious SQL will be escaped and treated as a raw string, not as actual SQL code.
+      // SELECT * FROM Repository WHERE TAG = 'javascript';--' AND public = 1; before
+      // SELECT * FROM Repository WHERE TAG = `javascript';--` AND public = 1; after
+      check = await app.mysql.query(sql, [u_name, em]);
+      // if exist
+      if (!check.length == 0) {
+        return null;
+      }
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+
+    const row1 = {
       _uid: app.uuint.uuid(), // a int uuid
       created_at: app.mysql.literals.now, // `now()` on db server
       updated_at: app.mysql.literals.now, // `now()` on db server
@@ -86,7 +95,7 @@ class HomeService extends Service {
     };
 
     try {
-      result = await app.mysql.insert('users', row); // add user
+      result = await app.mysql.insert('users', row1); // add user
     } catch (error) {
       console.log(error);
       return null;
