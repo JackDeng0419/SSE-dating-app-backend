@@ -37,7 +37,7 @@ module.exports = appInfo => {
       port: '3306',
       user: 'root',
       password: 'password123',
-      database: 'SSE-dating-app',
+      database: 'SSE-dating-application',
     },
   };
 

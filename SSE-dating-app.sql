@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.30, for macos12 (x86_64)
 --
--- Host: localhost    Database: SSE-dating-app
+-- Host: localhost    Database: SSE-dating-application
 -- ------------------------------------------------------
 -- Server version	8.0.30
 
@@ -24,4 +24,4 @@
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-10-05 16:05:20
+-- Dump completed on 2022-10-08 15:25:34
