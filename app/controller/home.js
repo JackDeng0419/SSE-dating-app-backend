@@ -87,6 +87,11 @@ class HomeController extends Controller {
     }
   }
 
+  /*
+  "u_name": "Mike",
+	"pass": "password123"
+  */
+
   async validateUser() {
     const { ctx } = this;
     const { u_name, pass } = ctx.request.body;
