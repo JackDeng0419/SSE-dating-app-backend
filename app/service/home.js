@@ -8,7 +8,7 @@ class HomeService extends Service {
     const { app } = this;
 
     try {
-      const result = await app.mysql.get('user_profiles', { users_id: id });
+      const result = await app.mysql.get('user_profile', { users_id: id });
       return result;
     } catch (error) {
       console.log(error);
@@ -35,7 +35,7 @@ class HomeService extends Service {
     };
 
     try {
-      const result = await app.mysql.update('user_profiles', row, options);
+      const result = await app.mysql.update('user_profile', row, options);
       return result;
     } catch (error) {
       console.log(error);
@@ -58,7 +58,7 @@ class HomeService extends Service {
     };
 
     try {
-      const result = await app.mysql.update('user_profiles', row, options);
+      const result = await app.mysql.update('user_profile', row, options);
       return result;
     } catch (error) {
       console.log(error);
@@ -70,7 +70,7 @@ class HomeService extends Service {
     const { app } = this;
 
     try {
-      const result = await app.mysql.get('users', { username: u_name });
+      const result = await app.mysql.get('user', { username: u_name });
       return result;
     } catch (error) {
       console.log(error);
@@ -85,7 +85,7 @@ class HomeService extends Service {
 
     // first we need to check if this user has been registered, either same username or email <- not used
     //const sql = `select * from users where username = ? or email = ?`;
-    const sql = `select * from users where username = ?`;
+    const sql = `select * from user where username = ?`;
     try {
       // By using placeholders, the malicious SQL will be escaped and treated as a raw string, not as actual SQL code.
       // SELECT * FROM Repository WHERE TAG = 'javascript';--' AND public = 1; before
@@ -109,7 +109,7 @@ class HomeService extends Service {
     };
 
     try {
-      await app.mysql.insert('users', row1); // add user
+      await app.mysql.insert('user', row1); // add user
     } catch (error) {
       console.log(error);
       return null;
@@ -122,7 +122,7 @@ class HomeService extends Service {
     };
 
     try {
-      const final = await app.mysql.insert('user_profiles', row2); // initialise user profile
+      const final = await app.mysql.insert('user_profile', row2); // initialise user profile
       return final;
     } catch (error) {
       console.log(error);
