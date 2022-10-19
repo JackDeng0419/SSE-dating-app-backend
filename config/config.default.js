@@ -23,13 +23,14 @@ module.exports = appInfo => {
       enable: false,
       ignoreJSON: true,
     },
-    domainWhiteList: [ '*' ],
+    domainWhiteList: [ 'http://localhost:8080' ],
   };
 
-  // config.cors = {
-  //   credentials: true,
-  //   allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
-  // };
+  config.cors = {
+    // origin: '*',
+    credentials: true,
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+  };
 
   config.mysql = {
     client: {
