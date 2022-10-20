@@ -51,10 +51,13 @@ module.exports = option => {
             });
             ctx.session.private_key = privateKey
             ctx.status=200;
-            ctx.msg="return RSA public key";
             ctx.body={
-                public_key: publicKey
-            };
+                code:200,
+                message:"return RSA public key",
+                data:{
+                    public_key: publicKey
+                }
+            }
         }
         else if(ctx.request.url === '/login/AES'){
             const private_key = ctx.session.private_key;
@@ -66,65 +69,78 @@ module.exports = option => {
         else if(ctx.request.url === '/login/login' || ctx.request.url === '/login/verify'){
             const key = Buffer.from(ctx.session.AES_key, "base64");
             const iv = Buffer.from(ctx.session.AES_iv, "base64");
-            let new_body = {}
-            for(const dic_key in ctx.request.body){
-                new_body[dic_key] = AES_decrypt(key, iv, ctx.request.body[dic_key])
-            }
-            ctx.request.body = new_body
+            const plaintext  = AES_decrypt(key, iv,ctx.request.body.data)
+            console.log(JSON.parse(plaintext))
+            ctx.request.body = JSON.parse(plaintext)
             await next();
-            new_body = {}
-            for(const dic_key in ctx.body){
-                new_body[dic_key] = AES_encrypt(key, iv, ctx.body[dic_key])
+            if(ctx.body.hasOwnProperty("data")){
+                ctx.body.data = AES_encrypt(key, iv, JSON.stringify(ctx.body.data))
             }
-            ctx.body = new_body
         }
         else if(ctx.request.url === '/login/status'){
             if(ctx.session.user_info === undefined){
-                ctx.status=400;
-                ctx.msg="locked down or logged out, please re-login";
+                ctx.status=200;
+                ctx.body={
+                    code:400,
+                    message: "locked down or logged out, please re-login",
+                }
             }
             else {
-                ctx.status =200;
-                ctx.msg="have already logged in"
-                const key = Buffer.from(ctx.session.AES_key, "base64");
-                const iv = Buffer.from(ctx.session.AES_iv, "base64");
-                let new_body = {}
-                for(const dic_key in ctx.session.user_info){
-                    if(dic_key !== "login_status") {
-                        new_body[dic_key] = AES_encrypt(key, iv, ctx.session.user_info[dic_key])
+                if(ctx.session.user_info.login_status === "0"){
+                    ctx.status=200;
+                    ctx.body={
+                        code:400,
+                        message: "locked down or logged out, please re-login",
                     }
                 }
-                ctx.body = new_body
+                else{
+                    ctx.status =200;
+                    ctx.msg="have already logged in"
+                    const key = Buffer.from(ctx.session.AES_key, "base64");
+                    const iv = Buffer.from(ctx.session.AES_iv, "base64");
+                    ctx.body = {
+                        code: 200,
+                        message: "have already logged in",
+                        data: AES_encrypt(key, iv, JSON.stringify(ctx.session.user_info))
+                    }
+                }
             }
         }
         else{
             if(ctx.session.user_info === undefined){
-                ctx.status=400;
-                ctx.msg="locked down or logged out, please re-login";
+                ctx.status=200;
+                ctx.body ={
+                    code:400,
+                    message:"locked down or logged out, please re-login"
+                }
             }
             else {
                 if(ctx.session.user_info.login_status === "0"){
-                    ctx.status=400;
-                    ctx.msg="locked down or logged out, please re-login";
+                    ctx.status=200;
+                    ctx.body ={
+                        code:400,
+                        message:"locked down or logged out, please re-login"
+                    }
                 }
                 else{
                     const key = Buffer.from(ctx.session.AES_key, "base64");
                     const iv = Buffer.from(ctx.session.AES_iv, "base64");
-                    let new_body = {}
-                    for(const dic_key in ctx.request.body){
-                        new_body[dic_key] = AES_decrypt(key, iv, ctx.request.body[dic_key])
+                    if(ctx.request.body.hasOwnProperty("data")) {
+                        const plaintext = AES_decrypt(key, iv, ctx.request.body.data)
+                        ctx.request.body = JSON.parse(plaintext)
                     }
-                    ctx.request.body = new_body
                     await next();
-                    new_body = {}
-                    for(const dic_key in ctx.body){
-                        new_body[dic_key] = AES_encrypt(key, iv, ctx.body[dic_key])
+                    if(ctx.body.hasOwnProperty("data")) {
+                        ctx.body.data = AES_encrypt(key, iv, JSON.stringify(ctx.body.data))
                     }
-                    ctx.body = new_body
                 }
             }
         }
-        console.log(ctx)
+        /*if(ctx.session.AES_key === undefined){
+            ctx.status = 601
+            ctx.message = "AES not exist"
+            ctx.body = null
+        }*/
         ctx.response.set('Access-Control-Allow-Origin', ctx.get('origin'));
         ctx.response.set('Access-Control-Allow-Credentials', "true");
     };
