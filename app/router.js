@@ -22,4 +22,6 @@ module.exports = app => {
   router.get('/search-mate', controller.userList.getUserListInSearchMate);
   router.get('/search-mate-with-filter', controller.userList.getUserListInSearchMateWithFilter);
   router.get('/my-likes', controller.userList.getMyLikesUsers);
+  router.get('/my-dislikes', controller.userList.getMyDislikesUsers);
+  router.get('/who-likes-me', controller.userList.getUsersWhoLikesMe);
 };

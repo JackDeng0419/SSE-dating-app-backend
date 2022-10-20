@@ -82,6 +82,60 @@ class UserListController extends Controller {
       };
     }
   }
+
+  async getMyDislikesUsers() {
+    const { ctx } = this;
+
+    try {
+      const result = await ctx.service.userList.getMyDislikesUsers();
+      if (result) {
+        ctx.body = {
+          code: 200,
+          message: 'Getting my dislikes users succeeded',
+          data: result,
+        };
+      } else {
+        ctx.body = {
+          code: 500,
+          message: 'Getting my dislikes users failed',
+          data: null,
+        };
+      }
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: 501,
+        message: 'database error, please try again',
+      };
+    }
+  }
+
+  async getUsersWhoLikesMe() {
+    const { ctx } = this;
+
+    try {
+      const result = await ctx.service.userList.getUsersWhoLikesMe();
+      if (result) {
+        ctx.body = {
+          code: 200,
+          message: 'Getting users who like me succeeded',
+          data: result,
+        };
+      } else {
+        ctx.body = {
+          code: 500,
+          message: 'Getting users who like me failed',
+          data: null,
+        };
+      }
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: 501,
+        message: 'database error, please try again',
+      };
+    }
+  }
 }
 
 module.exports = UserListController;
