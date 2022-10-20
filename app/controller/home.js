@@ -13,9 +13,9 @@ class HomeController extends Controller {
     const { id } = ctx.request.body;
 
     // before start need to check user input
-    const onlyNumericPattern = /^[0-9]+$/; 
+    const onlyNumericPattern = /^[0-9]+$/;
 
-    if(!onlyNumericPattern.test(id)) {
+    if (!onlyNumericPattern.test(id)) {
       ctx.body = {
         msg: 'invalid id',
         data: null,
@@ -37,7 +37,7 @@ class HomeController extends Controller {
       }
       ctx.body = {
         msg: 'retrieve user profile successed',
-        data: result, // return _id can be used for retrive user_profile 
+        data: result, // return _id can be used for retrive user_profile
       };
       ctx.status = 200;
     } catch (error) {
@@ -97,9 +97,9 @@ class HomeController extends Controller {
     const { u_name, pass } = ctx.request.body;
 
     // before start need to check user input
-    const onlyAlphanumericPattern = /^[A-Za-z0-9]+$/; 
+    const onlyAlphanumericPattern = /^[A-Za-z0-9]+$/;
 
-    if(!onlyAlphanumericPattern.test(u_name)) {
+    if (!onlyAlphanumericPattern.test(u_name)) {
       ctx.body = {
         msg: 'invalid username',
         data: null,
@@ -122,7 +122,7 @@ class HomeController extends Controller {
       const check = await ctx.compare(pass, result.password); // compare the hased password, return Boolean true/false
       ctx.body = {
         msg: check,
-        data: result._id, // return _id can be used for retrive user_profile 
+        data: result._id, // return _id can be used for retrive user_profile
       };
       ctx.status = 200;
     } catch (error) {
@@ -141,7 +141,7 @@ class HomeController extends Controller {
     // before start need to check user input
     const onlyAlphanumericPattern = /^[A-Za-z0-9]+$/;
 
-    if(!onlyAlphanumericPattern.test(u_name)) {
+    if (!onlyAlphanumericPattern.test(u_name)) {
       ctx.body = {
         msg: 'invalid username',
         data: null,
@@ -176,7 +176,7 @@ class HomeController extends Controller {
       };
       ctx.status = 500;
     }
-  }  
+  }
 }
 
 module.exports = HomeController;

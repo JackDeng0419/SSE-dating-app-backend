@@ -15,5 +15,6 @@ module.exports = app => {
 
   /* Login */
   router.post('/login/check', controller.login.usernamePasswordCheck);
-  router.get('/login/status', controller.login.getLoginStatus)
+  router.get('/login/status', controller.login.getLoginStatus);
+  router.post('/login/signup', controller.login.signup)
 };

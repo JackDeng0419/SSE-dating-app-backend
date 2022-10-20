@@ -49,6 +49,31 @@ class LoginController extends Controller {
       };
     }
   }
+
+  async signup() {
+    const { ctx } = this;
+    const signup_form = ctx.request.body;
+    try {
+      const result = await ctx.service.login.signup(signup_form);
+      if (result) {
+        ctx.body = {
+          code: 200,
+          message: 'Signup succeeded',
+        };
+      } else {
+        ctx.body = {
+          code: 500,
+          message: 'Signup failed',
+        };
+      }
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        code: 501,
+        message: 'database error, please try again',
+      };
+    }
+  }
 }
 
 module.exports = LoginController;

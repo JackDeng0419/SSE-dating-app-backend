@@ -31,7 +31,7 @@ class HomeService extends Service {
     const options = {
       where: {
         users_id: id,
-      }
+      },
     };
 
     try {
@@ -54,7 +54,7 @@ class HomeService extends Service {
     const options = {
       where: {
         users_id: id,
-      }
+      },
     };
 
     try {
@@ -80,17 +80,17 @@ class HomeService extends Service {
 
   async addUser(u_name, pass) {
     const { app } = this;
-    var check;
-    var uid = app.uuint.uuid();
+    let check;
+    const uid = app.uuint.uuid();
 
     // first we need to check if this user has been registered, either same username or email <- not used
-    //const sql = `select * from users where username = ? or email = ?`;
-    const sql = `select * from user where username = ?`;
+    // const sql = `select * from users where username = ? or email = ?`;
+    const sql = 'select * from user where username = ?';
     try {
       // By using placeholders, the malicious SQL will be escaped and treated as a raw string, not as actual SQL code.
       // SELECT * FROM Repository WHERE TAG = 'javascript';--' AND public = 1; before
       // SELECT * FROM Repository WHERE TAG = `javascript';--` AND public = 1; after
-      check = await app.mysql.query(sql, [u_name]);
+      check = await app.mysql.query(sql, [ u_name ]);
       // if exist
       if (!check.length == 0) {
         return null;
