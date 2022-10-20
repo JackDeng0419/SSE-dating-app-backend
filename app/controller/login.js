@@ -16,17 +16,24 @@ class LoginController extends Controller {
     // TODO: found the user, then verify the password
     const result = await ctx.service.login.usernamePasswordCheck(username);
     if (result === null) {
-      ctx.status = 404;
-      ctx.message = 'user not existed';
+      ctx.status = 200;
+      ctx.body = {
+        code: 404,
+        message: 'user not exist',
+      };
     } else {
       if (result.password === password) {
         ctx.status = 200;
         ctx.message = 'login successfully';
         ctx.body = {
-          _uid: result._uid,
-          username: result.username,
-          mobile_number: result.mobile_number,
-          email: result.email,
+          code: 200,
+          message: 'login successfully',
+          data: {
+            _uid: result._uid,
+            username: result.username,
+            mobile_number: result.mobile_number,
+            email: result.email,
+          },
         };
         ctx.session.user_info = {
           login_status: '0',
@@ -49,8 +56,11 @@ class LoginController extends Controller {
         };
         console.log(ctx.session.verification_code.code);
       } else {
-        ctx.status = 400;
-        ctx.message = 'password wrong';
+        ctx.status = 200;
+        ctx.body = {
+          code: 400,
+          message: 'password wrong',
+        };
       }
     }
   }
@@ -60,11 +70,17 @@ class LoginController extends Controller {
     const { code } = ctx.request.body;
     if (ctx.session.verification_code.code === code) {
       ctx.status = 200;
-      ctx.message = 'verification successfully';
+      ctx.body = {
+        code: 200,
+        message: 'verification successfully',
+      };
       ctx.session.user_info.login_status = '1';
     } else {
-      ctx.status = 400;
-      ctx.message = 'verification code wrong';
+      ctx.status = 200;
+      ctx.body = {
+        code: 400,
+        message: 'verification successfully',
+      };
     }
   }
 
