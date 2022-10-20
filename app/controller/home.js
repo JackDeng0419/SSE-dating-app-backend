@@ -10,36 +10,14 @@ class HomeController extends Controller {
 
   async userProfile() {
     const { ctx } = this;
-    const { id } = ctx.request.body;
-
-    // before start need to check user input
-    const onlyNumericPattern = /^[0-9]+$/;
-
-    if (!onlyNumericPattern.test(id)) {
-      ctx.body = {
-        msg: 'invalid id',
-        data: null,
-      };
-      ctx.status = 400;
-      return;
-    }
+    const id = ctx.session.user_info._uid
 
     // all good to start
     try {
       const result = await ctx.service.home.userProfile(id);
-      if (result == null) {
-        ctx.body = {
-          msg: 'user_profile not exist',
-          data: null,
-        };
-        ctx.status = 400;
-        return;
-      }
-      ctx.body = {
-        msg: 'retrieve user profile successed',
-        data: result, // return _id can be used for retrive user_profile
-      };
-      ctx.status = 200;
+      ctx.status=200
+      ctx.message='retrieve user profile successed'
+      ctx.body = result;
     } catch (error) {
       ctx.body = {
         msg: 'retrieve user profile failed: ' + error.message,

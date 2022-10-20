@@ -16,7 +16,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1663915538419_5954';
 
   // add your middleware config here
-  config.middleware = [];
+  config.middleware = ["encryption"];
 
   config.security = {
     csrf: {
@@ -41,6 +41,12 @@ module.exports = appInfo => {
       database: 'SSE-dating-app',
     },
   };
+
+  config.session = {
+    maxAge: 10 * 1000,
+    encrypt: true,
+    renew: true
+  }
 
   config.uuidInt = {
     client: {

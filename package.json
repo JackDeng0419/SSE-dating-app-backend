@@ -7,9 +7,10 @@
     "declarations": true
   },
   "dependencies": {
+    "Buffer": "^0.0.0",
     "egg": "^2",
-    "egg-cors": "^2.2.3",
     "egg-bcrypt": "^1.1.0",
+    "egg-cors": "^2.2.3",
     "egg-mysql": "^3.1.1",
     "egg-scripts": "^2",
     "egg-uuid-int": "^2.0.2"
