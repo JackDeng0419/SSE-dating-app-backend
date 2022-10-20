@@ -10,13 +10,13 @@ class HomeController extends Controller {
 
   async userProfile() {
     const { ctx } = this;
-    const id = ctx.session.user_info._uid
+    const id = ctx.session.user_info._uid;
 
     // all good to start
     try {
       const result = await ctx.service.home.userProfile(id);
-      ctx.status=200
-      ctx.message='retrieve user profile successed'
+      ctx.status = 200;
+      ctx.message = 'retrieve user profile successed';
       ctx.body = result;
     } catch (error) {
       ctx.body = {

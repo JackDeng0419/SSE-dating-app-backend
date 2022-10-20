@@ -4,14 +4,14 @@ const Service = require('egg').Service;
 
 class LoginService extends Service {
   async usernamePasswordCheck(username) {
-     const { app } = this;
-     try {
-       console.log(username)
-       return await app.mysql.get('user', {username: username});
-     } catch (error) {
-       console.log(error);
-       return null;
-     }
+    const { app } = this;
+    try {
+      console.log(username);
+      return await app.mysql.get('user', { username });
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   }
 
   async addUser(name) {

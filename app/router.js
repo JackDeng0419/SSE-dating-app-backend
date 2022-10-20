@@ -14,7 +14,12 @@ module.exports = app => {
   router.post('/add_user', controller.home.addUser);
 
   /* Login */
-  router.post('/login/signup', controller.login.signup)
+  router.post('/login/signup', controller.login.signup);
   router.post('/login/login', controller.login.usernamePasswordCheck);
   router.post('/login/verify', controller.login.verificationCheck);
+
+  /* Get user list */
+  router.get('/search-mate', controller.userList.getUserListInSearchMate);
+  router.get('/search-mate-with-filter', controller.userList.getUserListInSearchMateWithFilter);
+  router.get('/my-likes', controller.userList.getMyLikesUsers);
 };
