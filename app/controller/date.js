@@ -52,6 +52,66 @@ class DateController extends Controller {
     }
   }
 
+  async cancelDate() {
+    const { ctx, app } = this;
+    // const id = ctx.session.user_info._uid;
+    const { date_id: _uid } = ctx.request.body;
+
+    try {
+      const result = await ctx.service.date.cancelDate(_uid);
+      ctx.status = 200;
+      if (result != null) {
+        ctx.body = {
+          code: 200,
+          message: 'send date successed',
+          data: result,
+        };
+      } else {
+        ctx.body = {
+          code: 400,
+          message: 'send date failed',
+          data: result,
+        };
+      }
+    } catch (error) {
+      ctx.body = {
+        msg: 'send date failed: ' + error.message,
+        data: null,
+      };
+      ctx.status = 500;
+    }
+  }
+
+  async getDateFromMe() {
+    const { ctx, app } = this;
+    const id = ctx.session.user_info._uid;
+
+    try {
+      const result = await ctx.service.date.getDateFromId(id);
+      console.log(result);
+      ctx.status = 200;
+      if (result != null) {
+        ctx.body = {
+          code: 200,
+          message: 'get date successed',
+          data: result,
+        };
+      } else {
+        ctx.body = {
+          code: 400,
+          message: 'get date failed',
+          data: result,
+        };
+      }
+    } catch (error) {
+      ctx.body = {
+        msg: 'send date failed: ' + error.message,
+        data: null,
+      };
+      ctx.status = 500;
+    }
+  }
+
   async updateProfile_basic() {
     const { ctx } = this;
     const { id, f_name, l_name, ag, gen, pic, cit } = ctx.request.body;
