@@ -2,23 +2,15 @@
 
 const Service = require('egg').Service;
 
-class LikeService extends Service {
+class DateService extends Service {
 
-  async getLikeStatus(from_id, to_id) {
+  async newDate(dateObject) {
     const { app } = this;
 
     try {
 
-      const result = await app.mysql.get('my_like', { from_id, to_id });
-
-      if (result == null) {
-        // record not exist, create a new record with status 0
-        await app.mysql.insert('my_like', { from_id, to_id, like_status: 0 });
-        return 0;
-      }
-      return result.like_status;
-
-
+      const result = await app.mysql.insert('date', { ...dateObject, updated_at: app.mysql.literals.now, created_at: app.mysql.literals.now });
+      return result;
     } catch (error) {
       console.log(error);
       return null;
@@ -61,4 +53,4 @@ class LikeService extends Service {
     }
   }
 }
-module.exports = LikeService;
+module.exports = DateService;

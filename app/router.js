@@ -31,4 +31,9 @@ module.exports = app => {
   router.post('/like-user', controller.like.likeUser);
   router.post('/dislike-user', controller.like.dislikeUser);
   router.post('/normal-user', controller.like.normalUser);
+
+  /* Date */
+  router.post('/send-date', controller.date.sendDate);
+  // router.post('/get-like-status', controller.like.getLikeStatus);
+
 };
