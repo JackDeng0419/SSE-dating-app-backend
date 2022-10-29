@@ -5,7 +5,6 @@ const Controller = require('egg').Controller;
 class UserListController extends Controller {
   async getUserListInSearchMate() {
     const { ctx } = this;
-    console.log('getUserListInSearchMate');
     try {
       const result = await ctx.service.userList.getUserListInSearchMate();
       if (result) {

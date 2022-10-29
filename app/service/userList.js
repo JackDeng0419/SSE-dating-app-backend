@@ -1,17 +1,16 @@
 'use strict';
 
 const Service = require('egg').Service;
+const LIKE_STATUS = require('../constant');
 
 class UserListService extends Service {
 
   async getUserListInSearchMate() {
-    console.log('getUserListInSearchMate');
     const { app, ctx } = this;
     const requestUserID = ctx.session.user_info._uid;
     try {
 
       const userList = await app.mysql.query(`SELECT picture as avatar, first_name as firstName, last_name as lastName, age, gender, city as location, _uid as userId FROM user LEFT JOIN user_profile on _uid=users_id WHERE NOT _uid=${requestUserID} `);
-      console.log('USERLIST', userList);
 
       return userList;
     } catch (error) {
@@ -26,7 +25,6 @@ class UserListService extends Service {
     const requestUserID = ctx.session.user_info._uid;
     try {
       const myLikesUsersID = await (await app.mysql.select('my_like', { where: { from_id: requestUserID, like_status: 1 } })).map(element => { return element.to_id; });
-      console.log(myLikesUsersID);
       const myLikesUsers = await this.getUserListByIDArray(myLikesUsersID);
 
       return myLikesUsers;
@@ -42,7 +40,6 @@ class UserListService extends Service {
     const requestUserID = ctx.session.user_info._uid;
     try {
       const myLikesUsersID = await (await app.mysql.select('my_like', { where: { from_id: requestUserID, like_status: 2 } })).map(element => { return element.to_id; });
-      console.log(myLikesUsersID);
       const myLikesUsers = await this.getUserListByIDArray(myLikesUsersID);
 
       return myLikesUsers;
@@ -58,7 +55,6 @@ class UserListService extends Service {
     const requestUserID = ctx.session.user_info._uid;
     try {
       const myLikesUsersID = await (await app.mysql.select('my_like', { where: { to_id: requestUserID, like_status: 1 } })).map(element => { return element.to_id; });
-      console.log(myLikesUsersID);
       const myLikesUsers = await this.getUserListByIDArray(myLikesUsersID);
 
       return myLikesUsers;
@@ -96,7 +92,6 @@ class UserListService extends Service {
         age: element.age,
         userId: element.users_id,
         location: element.city }));
-    console.log(userList);
 
     return userList;
   }

@@ -24,4 +24,11 @@ module.exports = app => {
   router.get('/my-likes', controller.userList.getMyLikesUsers);
   router.get('/my-dislikes', controller.userList.getMyDislikesUsers);
   router.get('/who-likes-me', controller.userList.getUsersWhoLikesMe);
+
+
+  /* Like */
+  router.get('/get-like-status', controller.like.getLikeStatus);
+  router.post('/like-user', controller.like.likeUser);
+  router.post('/dislike-user', controller.like.dislikeUser);
+  router.post('/normal-user', controller.like.normalUser);
 };

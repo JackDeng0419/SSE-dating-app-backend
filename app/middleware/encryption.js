@@ -117,12 +117,12 @@ module.exports = option => {
         } else {
           const key = Buffer.from(ctx.session.AES_key, 'base64');
           const iv = Buffer.from(ctx.session.AES_iv, 'base64');
-          if (ctx.request.body.hasOwnProperty('data')) {
+          if (ctx.request.body && ctx.request.body.hasOwnProperty('data')) {
             const plaintext = AES_decrypt(key, iv, ctx.request.body.data);
             ctx.request.body = JSON.parse(plaintext);
           }
           await next();
-          if (ctx.body.hasOwnProperty('data')) {
+          if (ctx.body && ctx.body.hasOwnProperty('data')) {
             ctx.body.data = AES_encrypt(key, iv, JSON.stringify(ctx.body.data));
           }
         }
