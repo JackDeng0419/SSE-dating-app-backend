@@ -8,6 +8,7 @@ module.exports = app => {
   router.get('/', controller.home.index);
   router.get('/profile/basic-info/get', controller.profile.userProfile);
   router.get('/profile/looks/get', controller.profile.userLooks);
+  router.get('/profile/hobbies/get', controller.profile.userHobbies);
   router.post('/profile/basic-info/update', controller.profile.updateProfileBasicInfo);
   router.post('/profile/looks/update', controller.profile.updateLooks);
   router.post('/profile/hobbies/update', controller.profile.updateHobbies);

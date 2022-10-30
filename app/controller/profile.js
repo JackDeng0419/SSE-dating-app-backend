@@ -7,7 +7,7 @@ class ProfileController extends Controller {
 
   async userProfile() {
     const { ctx } = this;
-    const id = ctx.session.user_info._uid;
+    const { id } = ctx.query;
 
     // all good to start
     try {
@@ -30,7 +30,7 @@ class ProfileController extends Controller {
 
   async userLooks() {
     const { ctx } = this;
-    const id = ctx.session.user_info._uid;
+    const { id } = ctx.query;
 
     // all good to start
     try {
@@ -45,6 +45,36 @@ class ProfileController extends Controller {
       ctx.body = {
         code: 500,
         message: 'retrieve user profile failed: ' + error.message,
+        data: null,
+      };
+      ctx.status = 500;
+    }
+  }
+
+  async userHobbies() {
+    const { ctx } = this;
+    const { id } = ctx.query;
+
+    // all good to start
+    try {
+      const result = await ctx.service.profile.userHobbies(id);
+      Object.keys(result).forEach(key => {
+        if (result[key] == 0) {
+          result[key] = false;
+        } else if (result[key] == 1) {
+          result[key] = true;
+        }
+      });
+      ctx.status = 200;
+      ctx.body = {
+        code: 200,
+        message: 'retrieve user hobbies succeeded',
+        data: result,
+      };
+    } catch (error) {
+      ctx.body = {
+        code: 500,
+        message: 'retrieve user hobbies failed: ' + error.message,
         data: null,
       };
       ctx.status = 500;
