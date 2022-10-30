@@ -51,7 +51,8 @@ class LoginController extends Controller {
         }
         const time = new Date();
         ctx.session.verification_code = {
-          code: str,
+          // code: str,
+          code: 1234,
           created_at: time,
         };
         console.log(ctx.session.verification_code.code);

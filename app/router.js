@@ -6,8 +6,11 @@
 module.exports = app => {
   const { router, controller } = app;
   router.get('/', controller.home.index);
-  router.get('/BI/get', controller.home.userProfile);
-  router.post('/update_profile_basic', controller.home.updateProfile_basic);
+  router.get('/profile/basic-info/get', controller.profile.userProfile);
+  router.get('/profile/looks/get', controller.profile.userLooks);
+  router.post('/profile/basic-info/update', controller.profile.updateProfileBasicInfo);
+  router.post('/profile/looks/update', controller.profile.updateLooks);
+  router.post('/profile/hobbies/update', controller.profile.updateHobbies);
   router.post('/update_profile_covid', controller.home.updateProfile_covid);
 
   router.get('/validate_user', controller.home.validateUser);

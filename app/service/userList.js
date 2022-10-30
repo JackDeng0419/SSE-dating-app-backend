@@ -10,7 +10,7 @@ class UserListService extends Service {
     const requestUserID = ctx.session.user_info._uid;
     try {
 
-      const userList = await app.mysql.query(`SELECT picture as avatar, first_name as firstName, last_name as lastName, age, gender, city as location, _uid as userId FROM user LEFT JOIN user_profile on _uid=users_id WHERE NOT _uid=${requestUserID} `);
+      const userList = await app.mysql.query(`SELECT picture as avatar, first_name as firstName, last_name as lastName, age, gender, city as location, _uid as userId FROM user LEFT JOIN user_profile on _uid=user_id WHERE NOT _uid=${requestUserID} `);
 
       return userList;
     } catch (error) {
@@ -83,7 +83,7 @@ class UserListService extends Service {
     //   });
     // });
 
-    const userList = await (await app.mysql.select('user_profile', { where: { users_id: id_array } })).map(
+    const userList = await (await app.mysql.select('user_profile', { where: { user_id: id_array } })).map(
       element => ({
         avatar: element.picture,
         firstName: element.first_name,

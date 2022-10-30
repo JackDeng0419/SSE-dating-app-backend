@@ -200,13 +200,16 @@ class DateController extends Controller {
     }
   }
 
-  async updateProfile_basic() {
+  async updateProfileBasicInfo() {
     const { ctx } = this;
-    const { id, f_name, l_name, ag, gen, pic, cit } = ctx.request.body;
+    const basic_info = ctx.request.body;
+    const id = ctx.session.user_info._uid;
+
     try {
-      const result = await ctx.service.home.updateProfile_basic(id, f_name, l_name, ag, gen, pic, cit);
+      const result = await ctx.service.home.updateProfileBasicInfoOfId(id, basic_info);
       ctx.body = {
-        msg: 'profile updated',
+        code: 200,
+        message: 'profile updated',
         data: result,
       };
       ctx.status = 200;
@@ -219,24 +222,24 @@ class DateController extends Controller {
     }
   }
 
-  async updateProfile_covid() {
-    const { ctx } = this;
-    const { id, c_status, vac } = ctx.request.body;
-    try {
-      const result = await ctx.service.home.updateProfile_covid(id, c_status, vac);
-      ctx.body = {
-        msg: 'profile updated',
-        data: result,
-      };
-      ctx.status = 200;
-    } catch (error) {
-      ctx.body = {
-        msg: 'profile update failed: ' + error.message,
-        data: null,
-      };
-      ctx.status = 500;
-    }
-  }
+  //   async updateProfile_covid() {
+  //     const { ctx } = this;
+  //     const { id, c_status, vac } = ctx.request.body;
+  //     try {
+  //       const result = await ctx.service.home.updateProfile_covid(id, c_status, vac);
+  //       ctx.body = {
+  //         msg: 'profile updated',
+  //         data: result,
+  //       };
+  //       ctx.status = 200;
+  //     } catch (error) {
+  //       ctx.body = {
+  //         msg: 'profile update failed: ' + error.message,
+  //         data: null,
+  //       };
+  //       ctx.status = 500;
+  //     }
+  //   }
 
   /*
   "u_name": "Mike",
