@@ -35,7 +35,10 @@ module.exports = app => {
   /* Date */
   router.post('/send-date', controller.date.sendDate);
   router.get('/get-date-from-me', controller.date.getDateFromMe);
+  router.get('/get-date-to-me', controller.date.getDateToMe);
   router.post('/cancel-date', controller.date.cancelDate);
+  router.post('/accept-date', controller.date.acceptDate);
+  router.post('/reject-date', controller.date.rejectDate);
   // router.post('/get-like-status', controller.like.getLikeStatus);
 
 };

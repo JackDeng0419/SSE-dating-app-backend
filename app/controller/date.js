@@ -63,19 +63,79 @@ class DateController extends Controller {
       if (result != null) {
         ctx.body = {
           code: 200,
-          message: 'send date successed',
+          message: 'cancel date successed',
           data: result,
         };
       } else {
         ctx.body = {
           code: 400,
-          message: 'send date failed',
+          message: 'cancel date failed',
           data: result,
         };
       }
     } catch (error) {
       ctx.body = {
-        msg: 'send date failed: ' + error.message,
+        msg: 'cancel date failed: ' + error.message,
+        data: null,
+      };
+      ctx.status = 500;
+    }
+  }
+
+  async acceptDate() {
+    const { ctx, app } = this;
+    // const id = ctx.session.user_info._uid;
+    const { date_id: _uid } = ctx.request.body;
+
+    try {
+      const result = await ctx.service.date.acceptDate(_uid);
+      ctx.status = 200;
+      if (result != null) {
+        ctx.body = {
+          code: 200,
+          message: 'accept date successed',
+          data: result,
+        };
+      } else {
+        ctx.body = {
+          code: 400,
+          message: 'accept date failed',
+          data: result,
+        };
+      }
+    } catch (error) {
+      ctx.body = {
+        msg: 'accept date failed: ' + error.message,
+        data: null,
+      };
+      ctx.status = 500;
+    }
+  }
+
+  async rejectDate() {
+    const { ctx, app } = this;
+    // const id = ctx.session.user_info._uid;
+    const { date_id: _uid } = ctx.request.body;
+
+    try {
+      const result = await ctx.service.date.rejectDate(_uid);
+      ctx.status = 200;
+      if (result != null) {
+        ctx.body = {
+          code: 200,
+          message: 'reject date successed',
+          data: result,
+        };
+      } else {
+        ctx.body = {
+          code: 400,
+          message: 'reject date failed',
+          data: result,
+        };
+      }
+    } catch (error) {
+      ctx.body = {
+        msg: 'reject date failed: ' + error.message,
         data: null,
       };
       ctx.status = 500;
@@ -88,7 +148,35 @@ class DateController extends Controller {
 
     try {
       const result = await ctx.service.date.getDateFromId(id);
-      console.log(result);
+      ctx.status = 200;
+      if (result != null) {
+        ctx.body = {
+          code: 200,
+          message: 'get date successed',
+          data: result,
+        };
+      } else {
+        ctx.body = {
+          code: 400,
+          message: 'get date failed',
+          data: result,
+        };
+      }
+    } catch (error) {
+      ctx.body = {
+        msg: 'send date failed: ' + error.message,
+        data: null,
+      };
+      ctx.status = 500;
+    }
+  }
+
+  async getDateToMe() {
+    const { ctx, app } = this;
+    const id = ctx.session.user_info._uid;
+
+    try {
+      const result = await ctx.service.date.getDateToId(id);
       ctx.status = 200;
       if (result != null) {
         ctx.body = {
