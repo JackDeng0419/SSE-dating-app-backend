@@ -79,14 +79,14 @@ module.exports = option => {
         ctx.status = 200;
         ctx.body = {
           code: 400,
-          message: 'locked down or logged out, please re-login',
+          message: 'locked down or logged out, please re-login 82',
         };
       } else {
         if (ctx.session.user_info.login_status === '0') {
           ctx.status = 200;
           ctx.body = {
             code: 400,
-            message: 'locked down or logged out, please re-login',
+            message: 'locked down or logged out, please re-login 89',
           };
         } else {
           ctx.status = 200;
@@ -105,14 +105,14 @@ module.exports = option => {
         ctx.status = 200;
         ctx.body = {
           code: 400,
-          message: 'locked down or logged out, please re-login',
+          message: 'locked down or logged out, please re-login 108',
         };
       } else {
         if (ctx.session.user_info.login_status === '0') {
           ctx.status = 200;
           ctx.body = {
             code: 400,
-            message: 'locked down or logged out, please re-login',
+            message: 'locked down or logged out, please re-login 115',
           };
         } else {
           const key = Buffer.from(ctx.session.AES_key, 'base64');

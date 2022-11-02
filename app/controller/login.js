@@ -52,7 +52,7 @@ class LoginController extends Controller {
         const time = new Date();
         ctx.session.verification_code = {
           // code: str,
-          code: 1234,
+          code: '1234',
           created_at: time,
         };
         console.log(ctx.session.verification_code.code);
@@ -69,6 +69,7 @@ class LoginController extends Controller {
   async verificationCheck() {
     const { ctx } = this;
     const { code } = ctx.request.body;
+    console.log('verification check start');
     if (ctx.session.verification_code.code === code) {
       ctx.status = 200;
       ctx.body = {
@@ -76,11 +77,13 @@ class LoginController extends Controller {
         message: 'verification successfully',
       };
       ctx.session.user_info.login_status = '1';
+
+      console.log('verification check done');
     } else {
       ctx.status = 200;
       ctx.body = {
         code: 400,
-        message: 'verification successfully',
+        message: 'verification failed',
       };
     }
   }
