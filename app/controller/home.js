@@ -16,12 +16,15 @@ class HomeController extends Controller {
     try {
       const result = await ctx.service.home.userProfile(id);
       ctx.status = 200;
-      ctx.message = 'retrieve user profile successed';
-      ctx.body = result;
+      ctx.body = {
+        code: 200,
+        message: 'retrieve user profile successed',
+        data: result,
+      };
     } catch (error) {
       ctx.body = {
+        code: 500,
         msg: 'retrieve user profile failed: ' + error.message,
-        data: null,
       };
       ctx.status = 500;
     }
@@ -29,9 +32,13 @@ class HomeController extends Controller {
 
   async updateProfile_basic() {
     const { ctx } = this;
-    const { id, f_name, l_name, ag, gen, pic, cit } = ctx.request.body;
+    const id = ctx.session.user_info._uid;
+    const { first_name, last_name, age, gender, preferred_language, nationality, birthday, relationship_status,
+      profession, education, city, latitude, longitude } = ctx.request.body;
     try {
-      const result = await ctx.service.home.updateProfile_basic(id, f_name, l_name, ag, gen, pic, cit);
+      const result = await ctx.service.home.updateProfile_basic(id, first_name, last_name, age, gender,
+        preferred_language, nationality, birthday, relationship_status, profession, education, city, latitude,
+        longitude);
       ctx.body = {
         msg: 'profile updated',
         data: result,
@@ -65,11 +72,6 @@ class HomeController extends Controller {
     }
   }
 
-  /*
-  "u_name": "Mike",
-	"pass": "password123"
-  */
-
   async validateUser() {
     const { ctx } = this;
     const { u_name, pass } = ctx.request.body;
@@ -100,7 +102,7 @@ class HomeController extends Controller {
       const check = await ctx.compare(pass, result.password); // compare the hased password, return Boolean true/false
       ctx.body = {
         msg: check,
-        data: result._id, // return _id can be used for retrive user_profile
+        data: result._uid, // return _id can be used for retrive user_profile
       };
       ctx.status = 200;
     } catch (error) {

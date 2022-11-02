@@ -9,6 +9,7 @@ class LoginController extends Controller {
   }
 
   async usernamePasswordCheck() {
+    const nodemailer = require('nodemailer');
     const { ctx } = this;
     const { username, password } = ctx.request.body;
     console.log('USERNAME', username, password);
@@ -23,40 +24,77 @@ class LoginController extends Controller {
       };
     } else {
       if (result.password === password) {
-        ctx.status = 200;
-        ctx.message = 'login successfully';
-        ctx.body = {
-          code: 200,
-          message: 'login successfully',
-          data: {
+        let judge = 1;
+        let threshold = 0;
+        if(ctx.session.verification_code !== undefined){
+          const starttime = new Date(ctx.session.verification_code.created_at).getTime()
+          const endtime = new Date().getTime();
+          threshold = Math.round((endtime - starttime) / 1000)
+          if(threshold<=60)judge = 0
+          else judge = 1
+          console.log(threshold)
+          console.log(judge)
+        }
+        if(judge===0){
+          ctx.status = 200;
+          ctx.message = 'try after '+(60-threshold).toString()+' seconds'
+          ctx.body = {
+            code : 400,
+            message: 'try after '+(60-threshold).toString()+' seconds'
+          }
+        }
+        else{
+          ctx.status = 200;
+          ctx.message = 'login successfully';
+          const tmp = result.email
+          ctx.body = {
+            code: 200,
+            message: 'login successfully',
+            data: {
+              email: tmp.substring(0,2) + "**********" + tmp.substring(tmp.length-8, tmp.length)
+            },
+          };
+          ctx.session.user_info = {
+            login_status: '0',
             _uid: result._uid,
             username: result.username,
-            mobile_number: result.mobile_number,
             email: result.email,
-          },
-        };
-        ctx.session.user_info = {
-          login_status: '0',
-          _uid: result._uid,
-          username: result.username,
-          mobile_number: result.mobile_number,
-          email: result.email,
-        };
+          };
 
-        const arr = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ];
-        let str = '';// 定义空的字符串，作为最终的结果接收它
-        for (let i = 0; i < 6; i++) {
-          const num = Math.round(Math.random() * 9);// 0-15的随机数
-          str += arr[num];// 通过产生的随机数来获取数组中的内容
+          const arr = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ];
+          let str = '';// 定义空的字符串，作为最终的结果接收它
+          for (let i = 0; i < 6; i++) {
+            const num = Math.round(Math.random() * 9);// 0-15的随机数
+            str += arr[num];// 通过产生的随机数来获取数组中的内容
+          }
+          const time = new Date();
+          ctx.session.verification_code = {
+            code: str,
+            created_at: time,
+            type: "login"
+          };
+          console.log(ctx.session.verification_code.code);
+          /*
+                  //mail veri-code
+                  let transporter = nodemailer.createTransport({
+                    host: 'smtp.126.com',
+                    port: 465,
+                    secure: true,
+                    auth: {
+                      user: 'woainiya1998@126.com', // generated ethereal user
+                      pass: 'wangwenjin' // generated ethereal password
+                    },
+                  });
+                  let info = await transporter.sendMail({
+                    from: 'woainiya1998@126.com',
+                    to: result.email,
+                    subject: 'verification',
+                    text: ctx.session.verification_code.code
+                  })
+          */
         }
-        const time = new Date();
-        ctx.session.verification_code = {
-          // code: str,
-          code: '1234',
-          created_at: time,
-        };
-        console.log(ctx.session.verification_code.code);
-      } else {
+      }
+      else {
         ctx.status = 200;
         ctx.body = {
           code: 400,
@@ -66,26 +104,112 @@ class LoginController extends Controller {
     }
   }
 
+  async updateLoginCode() {
+    const nodemailer = require('nodemailer');
+    const { ctx } = this;
+    let judge = 1;
+    if(ctx.session.verification_code !== undefined){
+      const starttime = new Date(ctx.session.verification_code.created_at).getTime()
+      const endtime = new Date().getTime();
+      const threshold = Math.round((endtime - starttime) / 1000)
+      console.log(threshold)
+      if(threshold<=60) judge=0;
+      else judge = 1;
+    }
+    if(judge===0){
+      ctx.status = 200;
+      ctx.message = 'apply should be more than 60 second';
+      ctx.body = {
+        code: 400,
+        message: 'apply should be more than 60 second',
+      };
+    }
+    else{
+      ctx.status = 200;
+      ctx.message = 'update successfully';
+      ctx.body = {
+        code: 200,
+        message: 'update successfully',
+      };
+
+      const arr = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ];
+      let str = '';// 定义空的字符串，作为最终的结果接收它
+      for (let i = 0; i < 6; i++) {
+        const num = Math.round(Math.random() * 9);// 0-15的随机数
+        str += arr[num];// 通过产生的随机数来获取数组中的内容
+      }
+      ctx.session.verification_code = {
+        code: str,
+        created_at: new Date(),
+        type: "login"
+      };
+      console.log(ctx.session.verification_code.code);
+      /*
+              //mail veri-code
+              let transporter = nodemailer.createTransport({
+                host: 'smtp.126.com',
+                port: 465,
+                secure: true,
+                auth: {
+                  user: 'woainiya1998@126.com', // generated ethereal user
+                  pass: 'wangwenjin' // generated ethereal password
+                },
+              });
+              let info = await transporter.sendMail({
+                from: 'woainiya1998@126.com',
+                to: result.email,
+                subject: 'verification',
+                text: ctx.session.verification_code.code
+              })
+      */
+    }
+  }
+
   async verificationCheck() {
     const { ctx } = this;
     const { code } = ctx.request.body;
-    console.log('verification check start');
-    if (ctx.session.verification_code.code === code) {
-      ctx.status = 200;
-      ctx.body = {
-        code: 200,
-        message: 'verification successfully',
-      };
-      ctx.session.user_info.login_status = '1';
-
-      console.log('verification check done');
-    } else {
+    if(ctx.session.verification_code !== undefined){
+      let judge = 1;
+      const starttime = new Date(ctx.session.verification_code.created_at).getTime()
+      const endtime = new Date().getTime();
+      const threshold = Math.round((endtime - starttime) / 1000)
+      console.log(threshold)
+      if(threshold<=600) judge=0;
+      else judge = 1;
+      if(ctx.session.verification_code.type !== 'login')judge = 1
+      if(judge === 0){
+        if (ctx.session.verification_code.code === code) {
+          ctx.status = 200;
+          ctx.body = {
+            code: 200,
+            message: 'welcome ' + ctx.session.user_info.username,
+            data: ctx.session.user_info
+          };
+          ctx.session.user_info.login_status = '1';
+        } else {
+          ctx.status = 200;
+          ctx.body = {
+            code: 400,
+            message: 'verification error',
+          };
+        }
+      }
+      else{
+        ctx.status = 200;
+        ctx.body = {
+          code: 400,
+          message: 'code expired, please update it'
+        };
+      }
+    }
+    else{
       ctx.status = 200;
       ctx.body = {
         code: 400,
-        message: 'verification failed',
+        message: 'code expired, please update it'
       };
     }
+
   }
 
   async addUser() {
@@ -132,5 +256,6 @@ class LoginController extends Controller {
     }
   }
 }
+
 
 module.exports = LoginController;

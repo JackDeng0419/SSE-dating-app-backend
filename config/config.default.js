@@ -2,6 +2,7 @@
 
 'use strict';
 
+const path = require("path");
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
@@ -23,11 +24,13 @@ module.exports = appInfo => {
       enable: false,
       ignoreJSON: true,
     },
-    domainWhiteList: [ 'http://localhost:8080' ],
+    xframe: {
+      enable: true,
+    }
   };
 
   config.cors = {
-    // origin: '*',
+    origin: "http://localhost:8080",
     credentials: true,
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
   };
