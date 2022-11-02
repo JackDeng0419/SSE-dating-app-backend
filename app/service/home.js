@@ -1,7 +1,7 @@
 'use strict';
 
 const Service = require('egg').Service;
-
+const date = require('../utils/date.js')
 class HomeService extends Service {
 
   async userProfile(id) {
@@ -9,6 +9,7 @@ class HomeService extends Service {
 
     try {
       const result = await app.mysql.get('user_profile', { users_id: id });
+      result.birthday = date.dateFormat('yyyy-MM-dd', new Date(result.birthday));
       return result;
     } catch (error) {
       console.log(error);
@@ -16,22 +17,30 @@ class HomeService extends Service {
     }
   }
 
-  async updateProfile_basic(id, f_name, l_name, ag, gen, pic, cit) {
+  async updateProfile_basic(id, first_name, last_name, age, gender, preferred_language, nationality, birthday,
+                            relationship_status, profession, education, city, latitude, longitude) {
     const { app } = this;
     const row = {
-      first_name: f_name,
-      last_name: l_name,
-      age: ag,
-      gender: gen,
-      picture: pic,
-      city: cit,
+      first_name: first_name,
+      last_name: last_name,
+      age: age,
+      gender: gender,
+      preferred_language: preferred_language,
+      nationality: nationality,
+      birthday: birthday,
+      relationship_status: relationship_status,
+      profession: profession,
+      education: education,
+      city: city,
+      latitude: latitude,
+      longitude: longitude,
       updated_at: app.mysql.literals.now, // `now()` on db server
     };
 
     const options = {
       where: {
         users_id: id,
-      }
+      },
     };
 
     try {
@@ -54,7 +63,7 @@ class HomeService extends Service {
     const options = {
       where: {
         users_id: id,
-      }
+      },
     };
 
     try {
@@ -80,17 +89,17 @@ class HomeService extends Service {
 
   async addUser(u_name, pass) {
     const { app } = this;
-    var check;
-    var uid = app.uuint.uuid();
+    let check;
+    const uid = app.uuint.uuid();
 
     // first we need to check if this user has been registered, either same username or email <- not used
-    //const sql = `select * from users where username = ? or email = ?`;
-    const sql = `select * from user where username = ?`;
+    // const sql = `select * from users where username = ? or email = ?`;
+    const sql = 'select * from user where username = ?';
     try {
       // By using placeholders, the malicious SQL will be escaped and treated as a raw string, not as actual SQL code.
       // SELECT * FROM Repository WHERE TAG = 'javascript';--' AND public = 1; before
       // SELECT * FROM Repository WHERE TAG = `javascript';--` AND public = 1; after
-      check = await app.mysql.query(sql, [u_name]);
+      check = await app.mysql.query(sql, [ u_name ]);
       // if exist
       if (!check.length == 0) {
         return null;

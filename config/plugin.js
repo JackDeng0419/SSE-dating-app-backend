@@ -19,11 +19,11 @@ module.exports = {
 
   uuidInt: {
     enable: true,
-    package: 'egg-uuid-int'
+    package: 'egg-uuid-int',
   },
 
   bcrypt: {
     enable: true,
-    package: 'egg-bcrypt'
-  }
+    package: 'egg-bcrypt',
+  },
 };
