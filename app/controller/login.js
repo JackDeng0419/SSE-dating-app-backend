@@ -175,7 +175,6 @@ class LoginController extends Controller {
       console.log(threshold)
       if(threshold<=600) judge=0;
       else judge = 1;
-      if(ctx.session.verification_code.type !== 'login')judge = 1
       if(judge === 0){
         if (ctx.session.verification_code.code === code) {
           ctx.status = 200;
@@ -235,35 +234,65 @@ class LoginController extends Controller {
     const signup_form = ctx.request.body;
     const result_username = await ctx.service.login.check_username(signup_form.username);
     if(result_username){
-      const result_email = await ctx.service.login.check_email(signup_form.email);
-      if(result_email){
-        try {
-          const result = await ctx.service.login.signup(signup_form);
-          if (result) {
-            ctx.body = {
-              code: 200,
-              message: 'Signup succeeded',
-            };
-          } else {
-            ctx.body = {
-              code: 500,
-              message: 'Signup failed',
-            };
-          }
-        } catch (error) {
-          console.log(error);
-          ctx.body = {
-            code: 501,
-            message: 'database error, please try again',
-          };
+      if(ctx.session.signup_verification_code===undefined){
+        ctx.status=200;
+        ctx.message = "session expired or have not apply code, please verify first"
+        ctx.body = {
+          code:400,
+          message:"session expired or have not apply code, please verify first"
         }
       }
       else{
-        ctx.status = 200;
-        ctx.message = "email is duplicated";
-        ctx.body = {
-          code: 400,
-          message: "email is duplicated",
+        if(ctx.session.signup_verification_code.email!==signup_form.email){
+          ctx.status=200;
+          ctx.message = "please verify first"
+          ctx.body = {
+            code:400,
+            message:"please verify first"
+          }
+        }
+        else{
+          if(ctx.session.signup_verification_code.code!==signup_form.code){
+            ctx.status=200;
+            ctx.message = "verification code is wrong"
+            ctx.body = {
+              code:400,
+              message:"verification code is wrong"
+            }
+          }
+          else{
+            const result_email = await ctx.service.login.check_email(signup_form.email);
+            if(result_email){
+              try {
+                const result = await ctx.service.login.signup(signup_form);
+                if (result) {
+                  ctx.body = {
+                    code: 200,
+                    message: 'Signup succeeded',
+                  };
+                } else {
+                  ctx.body = {
+                    code: 500,
+                    message: 'Signup failed',
+                  };
+                }
+              } catch (error) {
+                console.log(error);
+                ctx.body = {
+                  code: 501,
+                  message: 'database error, please try again',
+                };
+              }
+            }
+            else{
+              ctx.status = 200;
+              ctx.message = "email is duplicated";
+              ctx.body = {
+                code: 400,
+                message: "email is duplicated",
+              }
+            }
+          }
         }
       }
     }
@@ -273,6 +302,64 @@ class LoginController extends Controller {
       ctx.body = {
         code: 400,
         message: "username is duplicated",
+      }
+    }
+  }
+
+  async signup_verify(){
+    const { ctx } = this;
+    const {email} = ctx.request.body;
+    const result_email = await ctx.service.login.check_email(email);
+    if(result_email) {
+      if(ctx.session.signup_verification_code!==undefined){
+        let judge = 1;
+        const starttime = new Date(ctx.session.signup_verification_code.created_at).getTime()
+        const endtime = new Date().getTime();
+        const threshold = Math.round((endtime - starttime) / 1000)
+        if(threshold<=10) judge=0;
+        else judge = 1;
+        if(judge===0){
+          ctx.status = 200;
+          ctx.message = 'apply should be more than 60 second';
+          ctx.body = {
+            code: 400,
+            message: 'apply should be more than 60 second',
+          };
+        }
+        else{
+          const arr = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ];
+          let str = '';// 定义空的字符串，作为最终的结果接收它
+          for (let i = 0; i < 6; i++) {
+            const num = Math.round(Math.random() * 9);// 0-15的随机数
+            str += arr[num];// 通过产生的随机数来获取数组中的内容
+          }
+          ctx.session.signup_verification_code.email = email
+          ctx.session.signup_verification_code.code = str
+          ctx.session.signup_verification_code.created_at = new Date()
+          console.log(ctx.session.signup_verification_code)
+        }
+      }
+      else{
+        const arr = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ];
+        let str = '';// 定义空的字符串，作为最终的结果接收它
+        for (let i = 0; i < 6; i++) {
+          const num = Math.round(Math.random() * 9);// 0-15的随机数
+          str += arr[num];// 通过产生的随机数来获取数组中的内容
+        }
+        ctx.session.signup_verification_code = {
+          email:email,
+          code: str,
+          created_at: new Date(),
+        };
+        console.log(ctx.session.signup_verification_code)
+      }
+    }
+    else{
+      ctx.status = 200;
+      ctx.message = "email is duplicated";
+      ctx.body = {
+        code: 400,
+        message: "email is duplicated",
       }
     }
   }

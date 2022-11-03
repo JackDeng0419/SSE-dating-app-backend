@@ -106,8 +106,8 @@ module.exports = option => {
         if (ctx.request.url === '/login/login'
             || ctx.request.url === '/login/verify'
             || ctx.request.url === '/login/code'
-            || ctx.request.url === '/login/signup') {
-          console.log(ctx.request.body)
+            || ctx.request.url === '/login/signup'
+            || ctx.request.url === '/login/signup/code') {
           await next();
           if(ctx.body !== undefined){
             if (ctx.body.hasOwnProperty('data')) {

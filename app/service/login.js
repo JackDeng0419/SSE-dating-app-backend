@@ -63,7 +63,6 @@ class LoginService extends Service {
         _uid,
         username: signup_form.username,
         password: signup_form.password,
-        mobile_number: signup_form.mobile_number,
         email: signup_form.email,
         created_at: app.mysql.literals.now,
         updated_at: app.mysql.literals.now,
