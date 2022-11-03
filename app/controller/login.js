@@ -26,8 +26,8 @@ class LoginController extends Controller {
       if (result.password === password) {
         let judge = 1;
         let threshold = 0;
-        if(ctx.session.verification_code !== undefined){
-          const starttime = new Date(ctx.session.verification_code.created_at).getTime()
+        if(ctx.session.login_verification_code !== undefined){
+          const starttime = new Date(ctx.session.login_verification_code.created_at).getTime()
           const endtime = new Date().getTime();
           threshold = Math.round((endtime - starttime) / 1000)
           if(threshold<=60)judge = 0
@@ -68,12 +68,11 @@ class LoginController extends Controller {
             str += arr[num];// 通过产生的随机数来获取数组中的内容
           }
           const time = new Date();
-          ctx.session.verification_code = {
+          ctx.session.login_verification_code = {
             code: str,
             created_at: time,
-            type: "login"
           };
-          console.log(ctx.session.verification_code.code);
+          console.log(ctx.session.login_verification_code.code);
           /*
                   //mail veri-code
                   let transporter = nodemailer.createTransport({
@@ -234,25 +233,47 @@ class LoginController extends Controller {
   async signup() {
     const { ctx } = this;
     const signup_form = ctx.request.body;
-    try {
-      const result = await ctx.service.login.signup(signup_form);
-      if (result) {
-        ctx.body = {
-          code: 200,
-          message: 'Signup succeeded',
-        };
-      } else {
-        ctx.body = {
-          code: 500,
-          message: 'Signup failed',
-        };
+    const result_username = await ctx.service.login.check_username(signup_form.username);
+    if(result_username){
+      const result_email = await ctx.service.login.check_email(signup_form.email);
+      if(result_email){
+        try {
+          const result = await ctx.service.login.signup(signup_form);
+          if (result) {
+            ctx.body = {
+              code: 200,
+              message: 'Signup succeeded',
+            };
+          } else {
+            ctx.body = {
+              code: 500,
+              message: 'Signup failed',
+            };
+          }
+        } catch (error) {
+          console.log(error);
+          ctx.body = {
+            code: 501,
+            message: 'database error, please try again',
+          };
+        }
       }
-    } catch (error) {
-      console.log(error);
+      else{
+        ctx.status = 200;
+        ctx.message = "email is duplicated";
+        ctx.body = {
+          code: 400,
+          message: "email is duplicated",
+        }
+      }
+    }
+    else{
+      ctx.status = 200;
+      ctx.message = "username is duplicated";
       ctx.body = {
-        code: 501,
-        message: 'database error, please try again',
-      };
+        code: 400,
+        message: "username is duplicated",
+      }
     }
   }
 }

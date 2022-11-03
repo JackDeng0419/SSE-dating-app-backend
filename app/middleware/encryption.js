@@ -61,13 +61,19 @@ module.exports = option => {
     } else if (ctx.request.url === '/login/AES') {
       const private_key = ctx.session.private_key;
       ctx.status = 200;
-      ctx.body = {
-        code: 200,
-        message: "get AES key"
-      }
       ctx.session.private_key = null;
       ctx.session.AES_key = RSA_decrypt(ctx.request.body.key, private_key).toString('base64');
       ctx.session.AES_iv = RSA_decrypt(ctx.request.body.iv, private_key).toString('base64');
+      ctx.body = {
+        code: 200,
+        message: "get AES key",
+        data:{
+          _csrf: ctx.csrf
+        }
+      }
+      const key = Buffer.from(ctx.session.AES_key, 'base64');
+      const iv = Buffer.from(ctx.session.AES_iv, 'base64');
+      ctx.body.data = AES_encrypt(key, iv, JSON.stringify(ctx.body.data));
     }
     else{
       if(ctx.session.AES_key===undefined){
@@ -84,15 +90,24 @@ module.exports = option => {
           try{
             const plaintext = AES_decrypt(key, iv, ctx.request.body.data);
             const result = JSON.parse(plaintext);
+            const reg = /^[A-Za-z]_/;
             for(const dic_key in result){
+              if(!reg.test(dic_key))continue
               result[key] = ctx.helper.escape(result[key])
+              result[key] = ctx.helper.sjs(result[key])
+              result[key] = ctx.helper.sjson(result[key])
+              result[key] = ctx.helper.shtml(result[key])
             }
             ctx.request.body = result;
           }catch (e){
-            ctx.throw(400, "AESkey")
+            ctx.throw(403, "AESkey")
           }
         }
-        if (ctx.request.url === '/login/login' || ctx.request.url === '/login/verify' || ctx.request.url === '/login/code') {
+        if (ctx.request.url === '/login/login'
+            || ctx.request.url === '/login/verify'
+            || ctx.request.url === '/login/code'
+            || ctx.request.url === '/login/signup') {
+          console.log(ctx.request.body)
           await next();
           if(ctx.body !== undefined){
             if (ctx.body.hasOwnProperty('data')) {

@@ -21,8 +21,11 @@ module.exports = appInfo => {
 
   config.security = {
     csrf: {
-      enable: false,
-      ignoreJSON: true,
+      // 判断是否需要 ignore 的方法，请求上下文 context 作为第一个参数
+      ignore: ctx => {
+        return ctx.request.url === '/login/RSA' || ctx.request.url === '/login/AES'
+      },
+      headerName: '_csrf'
     },
     xframe: {
       enable: true,
@@ -41,7 +44,7 @@ module.exports = appInfo => {
       port: '3306',
       user: 'root',
       password: '123456',
-      database: 'SSE-dating-app',
+      database: 'sse-dating-app',
     },
   };
 
