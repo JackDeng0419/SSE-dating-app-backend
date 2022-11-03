@@ -36,7 +36,7 @@ const AES_encrypt = function(key, iv, plaintext) {
 };
 module.exports = option => {
   return async function(ctx, next) {
-    //ctx.session.user_info = undefined
+    // ctx.session.user_info = undefined
     if (ctx.request.url === '/login/RSA') {
       const { publicKey, privateKey } = generateKeyPairSync('rsa', {
         modulusLength: 512,
@@ -66,41 +66,39 @@ module.exports = option => {
       ctx.session.AES_iv = RSA_decrypt(ctx.request.body.iv, private_key).toString('base64');
       ctx.body = {
         code: 200,
-        message: "get AES key",
-        data:{
-          _csrf: ctx.csrf
-        }
-      }
+        message: 'get AES key',
+        data: {
+          _csrf: ctx.csrf,
+        },
+      };
       const key = Buffer.from(ctx.session.AES_key, 'base64');
       const iv = Buffer.from(ctx.session.AES_iv, 'base64');
       ctx.body.data = AES_encrypt(key, iv, JSON.stringify(ctx.body.data));
-    }
-    else{
-      if(ctx.session.AES_key===undefined){
-        ctx.status = 400;
+    } else {
+      if (ctx.session.AES_key === undefined) {
+        ctx.status = 403;
         ctx.body = {
           code: 400,
-          message: "server have not AES key"
-        }
-      }
-      else{
-        if(ctx.request.body.hasOwnProperty("data")){
+          message: 'server have not AES key',
+        };
+      } else {
+        if (ctx.request.body.hasOwnProperty('data')) {
           const key = Buffer.from(ctx.session.AES_key, 'base64');
           const iv = Buffer.from(ctx.session.AES_iv, 'base64');
-          try{
+          try {
             const plaintext = AES_decrypt(key, iv, ctx.request.body.data);
             const result = JSON.parse(plaintext);
             const reg = /^[A-Za-z]_/;
-            for(const dic_key in result){
-              if(!reg.test(dic_key))continue
-              result[key] = ctx.helper.escape(result[key])
-              result[key] = ctx.helper.sjs(result[key])
-              result[key] = ctx.helper.sjson(result[key])
-              result[key] = ctx.helper.shtml(result[key])
+            for (const dic_key in result) {
+              if (!reg.test(dic_key)) continue;
+              result[key] = ctx.helper.escape(result[key]);
+              result[key] = ctx.helper.sjs(result[key]);
+              result[key] = ctx.helper.sjson(result[key]);
+              result[key] = ctx.helper.shtml(result[key]);
             }
             ctx.request.body = result;
-          }catch (e){
-            ctx.throw(403, "AESkey")
+          } catch (e) {
+            ctx.throw(403, 'AESkey');
           }
         }
         if (ctx.request.url === '/login/login'
@@ -109,23 +107,21 @@ module.exports = option => {
             || ctx.request.url === '/login/signup'
             || ctx.request.url === '/login/signup/code') {
           await next();
-          if(ctx.body !== undefined){
+          if (ctx.body !== undefined) {
             if (ctx.body.hasOwnProperty('data')) {
               const key = Buffer.from(ctx.session.AES_key, 'base64');
               const iv = Buffer.from(ctx.session.AES_iv, 'base64');
               ctx.body.data = AES_encrypt(key, iv, JSON.stringify(ctx.body.data));
             }
           }
-        }
-        else if (ctx.request.url === '/login/status') {
+        } else if (ctx.request.url === '/login/status') {
           if (ctx.session.user_info === undefined) {
             ctx.status = 200;
             ctx.body = {
               code: 400,
               message: 'locked down or logged out, please re-login',
             };
-          }
-          else {
+          } else {
             if (ctx.session.user_info.login_status === '0') {
               ctx.status = 200;
               ctx.body = {
@@ -137,7 +133,7 @@ module.exports = option => {
               ctx.msg = 'have already logged in';
               const key = Buffer.from(ctx.session.AES_key, 'base64');
               const iv = Buffer.from(ctx.session.AES_iv, 'base64');
-              const return_data = {_uid:ctx.session.user_info._uid, username:ctx.session.user_info.username}
+              const return_data = { _uid: ctx.session.user_info._uid, username: ctx.session.user_info.username };
               ctx.body = {
                 code: 200,
                 message: 'have already logged in',
@@ -145,8 +141,7 @@ module.exports = option => {
               };
             }
           }
-        }
-        else {
+        } else {
           if (ctx.session.user_info === undefined) {
             ctx.status = 200;
             ctx.body = {
@@ -162,7 +157,7 @@ module.exports = option => {
               };
             } else {
               await next();
-              if(ctx.body !== undefined){
+              if (ctx.body !== undefined) {
                 if (ctx.body.hasOwnProperty('data')) {
                   const key = Buffer.from(ctx.session.AES_key, 'base64');
                   const iv = Buffer.from(ctx.session.AES_iv, 'base64');
@@ -174,5 +169,5 @@ module.exports = option => {
         }
       }
     }
-  }
+  };
 };

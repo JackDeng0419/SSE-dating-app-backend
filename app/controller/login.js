@@ -259,10 +259,13 @@ class LoginController extends Controller {
             if (result_email) {
               try {
                 const result = await ctx.service.login.signup(signup_form);
-                if (result) {
+                if (result != null) {
                   ctx.body = {
                     code: 200,
                     message: 'Signup succeeded',
+                    data: {
+                      username: result,
+                    },
                   };
                 } else {
                   ctx.body = {
