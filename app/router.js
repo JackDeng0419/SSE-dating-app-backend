@@ -21,6 +21,7 @@ module.exports = app => {
 
   /* Login */
   router.post('/login/signup', controller.login.signup);
+  router.post('/login/signup/code', controller.login.signup_verify);
   router.post('/login/login', controller.login.usernamePasswordCheck);
   router.post('/login/verify', controller.login.verificationCheck);
   router.get('/login/code', controller.login.updateLoginCode);
