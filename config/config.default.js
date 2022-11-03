@@ -43,8 +43,8 @@ module.exports = appInfo => {
       host: '127.0.0.1',
       port: '3306',
       user: 'root',
-      password: 'pcmco001231',
-      database: 'SSE-dating-app',
+      password: '123456',
+      database: 'sse-dating-app',
     },
   };
 

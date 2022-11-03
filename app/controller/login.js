@@ -264,7 +264,7 @@ class LoginController extends Controller {
                     code: 200,
                     message: 'Signup succeeded',
                     data: {
-                      username: result,
+                      _uid: result,
                     },
                   };
                 } else {
@@ -353,6 +353,21 @@ class LoginController extends Controller {
         code: 400,
         message: 'email is duplicated',
       };
+    }
+  }
+
+  async logout(){
+    const { ctx } = this;
+    ctx.session.user_info = undefined
+    ctx.session.verification_code = undefined
+    ctx.session.signup_verification_code = undefined
+    ctx.session.AES_key = undefined
+    ctx.session.AES_iv = undefined
+    ctx.status = 200;
+    ctx.message = 'logout succeed'
+    ctx.body = {
+      code: 200,
+      message: 'logout succeed'
     }
   }
 }

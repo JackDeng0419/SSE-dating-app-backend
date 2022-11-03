@@ -59,21 +59,30 @@ module.exports = option => {
         },
       };
     } else if (ctx.request.url === '/login/AES') {
-      const private_key = ctx.session.private_key;
-      ctx.status = 200;
-      ctx.session.private_key = null;
-      ctx.session.AES_key = RSA_decrypt(ctx.request.body.key, private_key).toString('base64');
-      ctx.session.AES_iv = RSA_decrypt(ctx.request.body.iv, private_key).toString('base64');
-      ctx.body = {
-        code: 200,
-        message: 'get AES key',
-        data: {
-          _csrf: ctx.csrf,
-        },
-      };
-      const key = Buffer.from(ctx.session.AES_key, 'base64');
-      const iv = Buffer.from(ctx.session.AES_iv, 'base64');
-      ctx.body.data = AES_encrypt(key, iv, JSON.stringify(ctx.body.data));
+      try{
+        const private_key = ctx.session.private_key;
+        ctx.status = 200;
+        ctx.session.private_key = null;
+        ctx.session.AES_key = RSA_decrypt(ctx.request.body.key, private_key).toString('base64');
+        ctx.session.AES_iv = RSA_decrypt(ctx.request.body.iv, private_key).toString('base64');
+        ctx.body = {
+          code: 200,
+          message: 'get AES key',
+          data: {
+            _csrf: ctx.csrf,
+          },
+        };
+        const key = Buffer.from(ctx.session.AES_key, 'base64');
+        const iv = Buffer.from(ctx.session.AES_iv, 'base64');
+        ctx.body.data = AES_encrypt(key, iv, JSON.stringify(ctx.body.data));
+      }catch(e){
+        ctx.status=403;
+        ctx.message='please refresh the page';
+        ctx.body={
+          code:403,
+          message:'please refresh the page'
+        }
+      }
     } else {
       if (ctx.session.AES_key === undefined) {
         ctx.status = 403;
