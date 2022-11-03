@@ -26,32 +26,31 @@ class LoginController extends Controller {
       if (result.password === password) {
         let judge = 1;
         let threshold = 0;
-        if(ctx.session.verification_code !== undefined){
-          const starttime = new Date(ctx.session.verification_code.created_at).getTime()
+        if (ctx.session.verification_code !== undefined) {
+          const starttime = new Date(ctx.session.verification_code.created_at).getTime();
           const endtime = new Date().getTime();
-          threshold = Math.round((endtime - starttime) / 1000)
-          if(threshold<=60)judge = 0
-          else judge = 1
-          console.log(threshold)
-          console.log(judge)
+          threshold = Math.round((endtime - starttime) / 1000);
+          if (threshold <= 60)judge = 0;
+          else judge = 1;
+          console.log(threshold);
+          console.log(judge);
         }
-        if(judge===0){
+        if (judge === 0) {
           ctx.status = 200;
-          ctx.message = 'try after '+(60-threshold).toString()+' seconds'
+          ctx.message = 'try after ' + (60 - threshold).toString() + ' seconds';
           ctx.body = {
-            code : 400,
-            message: 'try after '+(60-threshold).toString()+' seconds'
-          }
-        }
-        else{
+            code: 400,
+            message: 'try after ' + (60 - threshold).toString() + ' seconds',
+          };
+        } else {
           ctx.status = 200;
           ctx.message = 'login successfully';
-          const tmp = result.email
+          const tmp = result.email;
           ctx.body = {
             code: 200,
             message: 'login successfully',
             data: {
-              email: tmp.substring(0,2) + "**********" + tmp.substring(tmp.length-8, tmp.length)
+              email: tmp.substring(0, 2) + '**********' + tmp.substring(tmp.length - 8, tmp.length),
             },
           };
           ctx.session.user_info = {
@@ -71,7 +70,7 @@ class LoginController extends Controller {
           ctx.session.verification_code = {
             code: str,
             created_at: time,
-            type: "login"
+            type: 'login',
           };
           console.log(ctx.session.verification_code.code);
           /*
@@ -93,8 +92,7 @@ class LoginController extends Controller {
                   })
           */
         }
-      }
-      else {
+      } else {
         ctx.status = 200;
         ctx.body = {
           code: 400,
@@ -108,23 +106,22 @@ class LoginController extends Controller {
     const nodemailer = require('nodemailer');
     const { ctx } = this;
     let judge = 1;
-    if(ctx.session.verification_code !== undefined){
-      const starttime = new Date(ctx.session.verification_code.created_at).getTime()
+    if (ctx.session.verification_code !== undefined) {
+      const starttime = new Date(ctx.session.verification_code.created_at).getTime();
       const endtime = new Date().getTime();
-      const threshold = Math.round((endtime - starttime) / 1000)
-      console.log(threshold)
-      if(threshold<=60) judge=0;
+      const threshold = Math.round((endtime - starttime) / 1000);
+      console.log(threshold);
+      if (threshold <= 60) judge = 0;
       else judge = 1;
     }
-    if(judge===0){
+    if (judge === 0) {
       ctx.status = 200;
       ctx.message = 'apply should be more than 60 second';
       ctx.body = {
         code: 400,
         message: 'apply should be more than 60 second',
       };
-    }
-    else{
+    } else {
       ctx.status = 200;
       ctx.message = 'update successfully';
       ctx.body = {
@@ -140,8 +137,9 @@ class LoginController extends Controller {
       }
       ctx.session.verification_code = {
         code: str,
+        // code: '1234',
         created_at: new Date(),
-        type: "login"
+        type: 'login',
       };
       console.log(ctx.session.verification_code.code);
       /*
@@ -168,22 +166,22 @@ class LoginController extends Controller {
   async verificationCheck() {
     const { ctx } = this;
     const { code } = ctx.request.body;
-    if(ctx.session.verification_code !== undefined){
+    if (ctx.session.verification_code !== undefined) {
       let judge = 1;
-      const starttime = new Date(ctx.session.verification_code.created_at).getTime()
+      const starttime = new Date(ctx.session.verification_code.created_at).getTime();
       const endtime = new Date().getTime();
-      const threshold = Math.round((endtime - starttime) / 1000)
-      console.log(threshold)
-      if(threshold<=600) judge=0;
+      const threshold = Math.round((endtime - starttime) / 1000);
+      console.log(threshold);
+      if (threshold <= 600) judge = 0;
       else judge = 1;
-      if(ctx.session.verification_code.type !== 'login')judge = 1
-      if(judge === 0){
+      if (ctx.session.verification_code.type !== 'login')judge = 1;
+      if (judge === 0) {
         if (ctx.session.verification_code.code === code) {
           ctx.status = 200;
           ctx.body = {
             code: 200,
             message: 'welcome ' + ctx.session.user_info.username,
-            data: ctx.session.user_info
+            data: ctx.session.user_info,
           };
           ctx.session.user_info.login_status = '1';
         } else {
@@ -193,20 +191,18 @@ class LoginController extends Controller {
             message: 'verification error',
           };
         }
-      }
-      else{
+      } else {
         ctx.status = 200;
         ctx.body = {
           code: 400,
-          message: 'code expired, please update it'
+          message: 'code expired, please update it',
         };
       }
-    }
-    else{
+    } else {
       ctx.status = 200;
       ctx.body = {
         code: 400,
-        message: 'code expired, please update it'
+        message: 'code expired, please update it',
       };
     }
 

@@ -9,10 +9,12 @@ module.exports = app => {
   router.get('/profile/basic-info/get', controller.profile.userProfile);
   router.get('/profile/looks/get', controller.profile.userLooks);
   router.get('/profile/hobbies/get', controller.profile.userHobbies);
+  router.get('/profile/covid/get', controller.profile.userCovid);
   router.post('/profile/basic-info/update', controller.profile.updateProfileBasicInfo);
   router.post('/profile/looks/update', controller.profile.updateLooks);
   router.post('/profile/hobbies/update', controller.profile.updateHobbies);
-  router.post('/update_profile_covid', controller.home.updateProfile_covid);
+  router.post('/profile/covid/update', controller.profile.updateCovid);
+  // router.post('/update_profile_covid', controller.home.updateProfile_covid);
 
   router.get('/validate_user', controller.home.validateUser);
   router.post('/add_user', controller.home.addUser);

@@ -34,8 +34,22 @@ class ProfileService extends Service {
     }
   }
 
+  async userCovid(id) {
+    const { app } = this;
+
+    try {
+      const result = await app.mysql.get('user_profile', { user_id: id });
+      return result;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
   async updateProfileBasicInfoOfId(id, basic_info) {
     const { app } = this;
+    console.log(basic_info);
+    console.log(id);
     const result = await app.mysql.update('user_profile', basic_info, { where: { user_id: id } });
     return result;
   }
@@ -54,6 +68,12 @@ class ProfileService extends Service {
       const _result = await app.mysql.insert('user_hobby', { ...hobbies, user_id: id });
       return _result;
     }
+    return result;
+  }
+
+  async updateCovidOfId(id, covid_info) {
+    const { app } = this;
+    const result = await app.mysql.update('user_profile', covid_info, { where: { user_id: id } });
     return result;
   }
 }

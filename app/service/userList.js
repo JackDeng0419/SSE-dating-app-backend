@@ -39,10 +39,10 @@ class UserListService extends Service {
     const { app, ctx } = this;
     const requestUserID = ctx.session.user_info._uid;
     try {
-      const myLikesUsersID = await (await app.mysql.select('my_like', { where: { from_id: requestUserID, like_status: 2 } })).map(element => { return element.to_id; });
-      const myLikesUsers = await this.getUserListByIDArray(myLikesUsersID);
+      const myDislikesUsersID = await (await app.mysql.select('my_like', { where: { from_id: requestUserID, like_status: 2 } })).map(element => { return element.to_id; });
+      const myDislikesUsers = await this.getUserListByIDArray(myDislikesUsersID);
 
-      return myLikesUsers;
+      return myDislikesUsers;
     } catch (error) {
       console.log('get my dislikes error');
       console.log(error);
@@ -90,7 +90,7 @@ class UserListService extends Service {
         lastName: element.last_name,
         gender: element.gender,
         age: element.age,
-        userId: element.users_id,
+        userId: element.user_id,
         location: element.city }));
 
     return userList;
