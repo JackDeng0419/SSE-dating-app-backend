@@ -372,14 +372,14 @@ class LoginController extends Controller {
         const starttime = new Date(ctx.session.signup_verification_code.created_at).getTime();
         const endtime = new Date().getTime();
         const threshold = Math.round((endtime - starttime) / 1000);
-        if (threshold <= 10) judge = 0;
+        if (threshold <= 60) judge = 0;
         else judge = 1;
         if (judge === 0) {
           ctx.status = 200;
-          ctx.message = 'apply should be more than 60 second';
+          ctx.message = 'please try after ' + (60-threshold).toString() + ' seconds';
           ctx.body = {
             code: 400,
-            message: 'apply should be more than 60 second',
+            message: 'please try after ' + (60-threshold).toString() + ' seconds'
           };
         } else {
           const arr = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ];
