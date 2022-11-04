@@ -11,6 +11,25 @@ class LoginController extends Controller {
   async usernamePasswordCheck() {
     const nodemailer = require('nodemailer');
     const { ctx } = this;
+    if(ctx.session.login_state!==undefined) {
+      if (ctx.session.login_state.times === 3) {
+        let judge = 1
+        const starttime = new Date(ctx.session.login_state.created_at).getTime();
+        const endtime = new Date().getTime();
+        const threshold = Math.round((endtime - starttime) / 1000);
+        if (threshold <= 60) judge = 0;
+        else judge = 1;
+        if (judge === 0) {
+          ctx.status = 200;
+          ctx.message = "you have tried for 3 times, please try it after" + (60-threshold).toString() + " seconds"
+          ctx.body = {
+            code: 400,
+            message: "you have tried for 3 times, please try it after" + (60-threshold).toString()  + " seconds"
+          }
+          return
+        }
+      }
+    }
     const { username, password } = ctx.request.body;
     console.log('USERNAME', username, password);
     // TODO: first check the existence of the username (service.user.getUserByUsername)
@@ -24,31 +43,34 @@ class LoginController extends Controller {
       };
     } else {
       if (result.password === password) {
+        if(ctx.session.login_state!==undefined) ctx.session.login_state = undefined
         let judge = 1;
         let threshold = 0;
         if (ctx.session.verification_code !== undefined) {
           const starttime = new Date(ctx.session.verification_code.created_at).getTime();
           const endtime = new Date().getTime();
           threshold = Math.round((endtime - starttime) / 1000);
-          if (threshold <= 60)judge = 0;
+          if (threshold <= 600)judge = 0;
           else judge = 1;
-          console.log(threshold);
-          console.log(judge);
         }
         if (judge === 0) {
+          const tmp = result.email;
           ctx.status = 200;
-          ctx.message = 'try after ' + (60 - threshold).toString() + ' seconds';
+          ctx.message = 'login successfully, you already have verification code';
           ctx.body = {
-            code: 400,
-            message: 'try after ' + (60 - threshold).toString() + ' seconds',
+            code: 200,
+            message: 'login successfully, you already have verification code',
+            data: {
+              email: tmp.substring(0, 2) + '**********' + tmp.substring(tmp.length - 8, tmp.length),
+            },
           };
         } else {
           ctx.status = 200;
-          ctx.message = 'login successfully';
+          ctx.message = 'login successfully, code is updated';
           const tmp = result.email;
           ctx.body = {
             code: 200,
-            message: 'login successfully',
+            message: 'login successfully, code is updated',
             data: {
               email: tmp.substring(0, 2) + '**********' + tmp.substring(tmp.length - 8, tmp.length),
             },
@@ -69,6 +91,7 @@ class LoginController extends Controller {
           const time = new Date();
           ctx.session.verification_code = {
             code: str,
+            times: 0,
             created_at: time,
           };
           console.log(ctx.session.verification_code.code);
@@ -92,11 +115,33 @@ class LoginController extends Controller {
           */
         }
       } else {
-        ctx.status = 200;
-        ctx.body = {
-          code: 400,
-          message: 'password wrong',
-        };
+        if(ctx.session.login_state!==undefined){
+          if(ctx.session.login_state.times ===3){
+            ctx.session.login_state = {times:1,created_at:new Date()}
+            ctx.status = 200;
+            ctx.body = {
+              code: 400,
+              message: 'password wrong, you have 2 times left',
+            };
+          }
+          else{
+            ctx.session.login_state.times = ctx.session.login_state.times + 1
+            ctx.session.login_state.created_a=new Date()
+            ctx.status = 200;
+            ctx.body = {
+              code: 400,
+              message: 'password wrong, you have '+ (3-parseInt(ctx.session.login_state.times)).toString()+' times left',
+            };
+          }
+        }
+        else{
+          ctx.session.login_state = {times:1,created_at:new Date()}
+          ctx.status = 200;
+          ctx.body = {
+            code: 400,
+            message: 'password wrong, you have 2 times left',
+          };
+        }
       }
     }
   }
@@ -105,20 +150,21 @@ class LoginController extends Controller {
     const nodemailer = require('nodemailer');
     const { ctx } = this;
     let judge = 1;
+    let threshold = 0
     if (ctx.session.verification_code !== undefined) {
       const starttime = new Date(ctx.session.verification_code.created_at).getTime();
       const endtime = new Date().getTime();
-      const threshold = Math.round((endtime - starttime) / 1000);
+      threshold = Math.round((endtime - starttime) / 1000);
       console.log(threshold);
       if (threshold <= 60) judge = 0;
       else judge = 1;
     }
     if (judge === 0) {
       ctx.status = 200;
-      ctx.message = 'apply should be more than 60 second';
+      ctx.message = 'please try after ' + (60-threshold).toString() + ' seconds';
       ctx.body = {
         code: 400,
-        message: 'apply should be more than 60 second',
+        message: 'please try after ' + (60-threshold).toString() + ' seconds'
       };
     } else {
       ctx.status = 200;
@@ -136,9 +182,8 @@ class LoginController extends Controller {
       }
       ctx.session.verification_code = {
         code: str,
-        // code: '1234',
+        times: 0,
         created_at: new Date(),
-        type: 'login',
       };
       console.log(ctx.session.verification_code.code);
       /*
@@ -166,11 +211,24 @@ class LoginController extends Controller {
     const { ctx } = this;
     const { code } = ctx.request.body;
     if (ctx.session.verification_code !== undefined) {
-      let judge = 1;
       const starttime = new Date(ctx.session.verification_code.created_at).getTime();
       const endtime = new Date().getTime();
       const threshold = Math.round((endtime - starttime) / 1000);
-      console.log(threshold);
+      if(ctx.session.verification_code.times === 3){
+        let judge = 1
+        if (threshold <= 60) judge = 0;
+        else judge = 1;
+        if (judge === 0) {
+          ctx.status = 200;
+          ctx.message = "you have tried for 3 times, please try it after" + (60-threshold).toString() + " seconds"
+          ctx.body = {
+            code: 400,
+            message: "you have tried for 3 times, please try it after" + (60-threshold).toString()  + " seconds"
+          }
+          return;
+        }
+      }
+      let judge = 1;
       if (threshold <= 600) judge = 0;
       else judge = 1;
       if (judge === 0) {
@@ -183,11 +241,15 @@ class LoginController extends Controller {
             data: ctx.session.user_info,
           };
           ctx.session.user_info.login_status = '1';
+          ctx.session.verification_code=undefined
         } else {
+          if(ctx.session.verification_code.times===3) ctx.session.verification_code.times = 0
+          ctx.session.verification_code.times = ctx.session.verification_code.times + 1
           ctx.status = 200;
+          ctx.message='verification error, you have ' + (3-ctx.session.verification_code.times).toString() + ' times left';
           ctx.body = {
             code: 400,
-            message: 'verification error',
+            message: 'verification error, you have ' + (3-ctx.session.verification_code.times).toString() + ' times left',
           };
         }
       } else {
@@ -204,7 +266,6 @@ class LoginController extends Controller {
         message: 'code expired, please update it',
       };
     }
-
   }
 
   async addUser() {

@@ -22,9 +22,10 @@ module.exports = appInfo => {
   config.security = {
     csrf: {
       // 判断是否需要 ignore 的方法，请求上下文 context 作为第一个参数
-      ignore: ctx => {
+      /*ignore: ctx => {
         return ctx.request.url === '/login/RSA' || ctx.request.url === '/login/AES'
-      },
+      },*/
+      enable: true,
       headerName: '_csrf'
     },
     xframe: {

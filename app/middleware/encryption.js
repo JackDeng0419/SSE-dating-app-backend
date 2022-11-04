@@ -56,6 +56,7 @@ module.exports = option => {
         message: 'return RSA public key',
         data: {
           public_key: publicKey,
+          _csrf: ctx.csrf,
         },
       };
     } else if (ctx.request.url === '/login/AES') {
@@ -67,16 +68,10 @@ module.exports = option => {
         ctx.session.AES_iv = RSA_decrypt(ctx.request.body.iv, private_key).toString('base64');
         ctx.body = {
           code: 200,
-          message: 'get AES key',
-          data: {
-            _csrf: ctx.csrf,
-          },
+          message: 'get AES key'
         };
-        const key = Buffer.from(ctx.session.AES_key, 'base64');
-        const iv = Buffer.from(ctx.session.AES_iv, 'base64');
-        ctx.body.data = AES_encrypt(key, iv, JSON.stringify(ctx.body.data));
       }catch(e){
-        ctx.status=403;
+        ctx.status=200;
         ctx.message='please refresh the page';
         ctx.body={
           code:403,
@@ -85,13 +80,14 @@ module.exports = option => {
       }
     } else {
       if (ctx.session.AES_key === undefined) {
-        ctx.status = 403;
+        ctx.status = 200;
         ctx.body = {
-          code: 400,
+          code: 403,
           message: 'server have not AES key',
         };
       } else {
         if (ctx.request.body.hasOwnProperty('data')) {
+          console.log("11111111111111",ctx.request.body)
           const key = Buffer.from(ctx.session.AES_key, 'base64');
           const iv = Buffer.from(ctx.session.AES_iv, 'base64');
           try {
@@ -107,7 +103,13 @@ module.exports = option => {
             }
             ctx.request.body = result;
           } catch (e) {
-            ctx.throw(403, 'AESkey');
+            ctx.status=200;
+            ctx.message='wrong key, please re-submit';
+            ctx.body={
+              code:403,
+              message:'wrong key, please re-submit'
+            }
+            return
           }
         }
         if (ctx.request.url === '/login/login'
