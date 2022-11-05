@@ -391,6 +391,12 @@ class LoginController extends Controller {
           ctx.session.signup_verification_code.email = email;
           ctx.session.signup_verification_code.code = str;
           ctx.session.signup_verification_code.created_at = new Date();
+          ctx.status=200
+          ctx.message='update successfully, please use it within 10 minutes'
+          ctx.body = {
+            code:200,
+            message:'update successfully, please use it within 10 minutes',
+          }
           console.log(ctx.session.signup_verification_code);
         }
       } else {
@@ -405,6 +411,12 @@ class LoginController extends Controller {
           code: str,
           created_at: new Date(),
         };
+        ctx.status=200
+        ctx.message='apply successfully, please use it within 10 minutes'
+        ctx.body = {
+          code:200,
+          message:'apply successfully, please use it within 10 minutes',
+        }
         console.log(ctx.session.signup_verification_code);
       }
     } else {

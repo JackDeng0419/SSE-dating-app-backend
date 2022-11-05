@@ -19,6 +19,14 @@ module.exports = appInfo => {
   // add your middleware config here
   config.middleware = [ 'encryption' ];
 
+
+  config.cluster = {
+    https: {
+      key: path.join(appInfo.baseDir, 'config/ca-key.pem'),
+      cert: path.join(appInfo.baseDir, 'config/ca.pem'),
+    },
+  }
+
   config.security = {
     csrf: {
       // 判断是否需要 ignore 的方法，请求上下文 context 作为第一个参数
@@ -34,7 +42,7 @@ module.exports = appInfo => {
   };
 
   config.cors = {
-    origin: "http://localhost:8080",
+    origin: "https://localhost:8080",
     credentials: true,
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
   };
