@@ -1,178 +1,23 @@
--- MySQL dump 10.13  Distrib 8.0.30, for macos12 (x86_64)
---
--- Host: localhost    Database: newschema
--- ------------------------------------------------------
--- Server version	8.0.30
+CREATE DATABASE `SSE-dating-app` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- Table structure for table `date`
---
+-- `SSE-dating-app`.`user` definition
 
-DROP TABLE IF EXISTS `date`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `date` (
-  `_uid` char(36) NOT NULL,
-  `from_id` char(36) NOT NULL,
-  `to_id` char(36) NOT NULL,
-  `date` datetime NOT NULL,
-  `location` varchar(45) NOT NULL,
-  `mask_requirement` int unsigned NOT NULL,
-  `state` int unsigned NOT NULL,
-  `updated_at` datetime NOT NULL,
-  `created_at` datetime NOT NULL,
-  PRIMARY KEY (`_uid`),
-  KEY `fk_date_id_1_idx` (`from_id`),
-  KEY `fk_date_id_2_idx` (`to_id`),
-  CONSTRAINT `fk_date_id_1` FOREIGN KEY (`from_id`) REFERENCES `user` (`_uid`) ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT `fk_date_id_2` FOREIGN KEY (`to_id`) REFERENCES `user` (`_uid`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `date`
---
-
-LOCK TABLES `date` WRITE;
-/*!40000 ALTER TABLE `date` DISABLE KEYS */;
-/*!40000 ALTER TABLE `date` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `my_dislike`
---
-
-DROP TABLE IF EXISTS `my_dislike`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `my_dislike` (
-  `_uid` char(36) NOT NULL,
-  `from_id` char(36) NOT NULL,
-  `to_id` char(36) NOT NULL,
-  `updated_at` datetime NOT NULL,
-  `created_at` datetime NOT NULL,
-  PRIMARY KEY (`_uid`),
-  KEY `fk_dislike_id_1_idx` (`from_id`),
-  KEY `fk_dislike_id_2_idx` (`to_id`),
-  CONSTRAINT `fk_dislike_id_1` FOREIGN KEY (`from_id`) REFERENCES `user` (`_uid`) ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT `fk_dislike_id_2` FOREIGN KEY (`to_id`) REFERENCES `user` (`_uid`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `my_dislike`
---
-
-LOCK TABLES `my_dislike` WRITE;
-/*!40000 ALTER TABLE `my_dislike` DISABLE KEYS */;
-/*!40000 ALTER TABLE `my_dislike` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `my_like`
---
-
-DROP TABLE IF EXISTS `my_like`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `my_like` (
-  `_uid` char(36) NOT NULL,
-  `from_id` char(36) NOT NULL,
-  `to_id` char(36) NOT NULL,
-  `updated_at` datetime NOT NULL,
-  `created_at` datetime NOT NULL,
-  PRIMARY KEY (`_uid`),
-  KEY `fk_like_id_1_idx` (`from_id`),
-  KEY `fk_like_id_2_idx` (`to_id`),
-  CONSTRAINT `fk_like_id_1` FOREIGN KEY (`from_id`) REFERENCES `user` (`_uid`) ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT `fk_like_id_2` FOREIGN KEY (`to_id`) REFERENCES `user` (`_uid`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `my_like`
---
-
-LOCK TABLES `my_like` WRITE;
-/*!40000 ALTER TABLE `my_like` DISABLE KEYS */;
-/*!40000 ALTER TABLE `my_like` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
   `_uid` char(36) NOT NULL,
   `username` varchar(45) NOT NULL,
   `password` varchar(255) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`_uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('3491870103568384','Mike','$2a$10$eAcbVg0qNzD4sF/OrywcJeKC5tvNFPwzHf1zcWgZWzywiS/u5zfm.','2022-10-08 16:40:31','2022-10-08 16:40:31');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user_hobby`
---
-
-DROP TABLE IF EXISTS `user_hobby`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user_hobby` (
-  `_uid` char(36) NOT NULL,
-  `users_id` char(36) NOT NULL,
-  `hobby` varchar(45) NOT NULL,
-  `updated_at` datetime NOT NULL,
-  `created_at` datetime NOT NULL,
+  `email` varchar(100) NOT NULL,
   PRIMARY KEY (`_uid`),
-  KEY `fk_hobby_id_idx` (`users_id`),
-  CONSTRAINT `fk_hobby_id` FOREIGN KEY (`users_id`) REFERENCES `user` (`_uid`) ON DELETE CASCADE ON UPDATE RESTRICT
+  UNIQUE KEY `user_UN` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `user_hobby`
---
+-- `SSE-dating-app`.user_profile definition
 
-LOCK TABLES `user_hobby` WRITE;
-/*!40000 ALTER TABLE `user_hobby` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_hobby` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user_profile`
---
-
-DROP TABLE IF EXISTS `user_profile`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_profile` (
-  `users_id` char(36) NOT NULL,
+  `user_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `first_name` varchar(45) DEFAULT NULL,
   `last_name` varchar(45) DEFAULT NULL,
   `age` int unsigned DEFAULT NULL,
@@ -180,31 +25,113 @@ CREATE TABLE `user_profile` (
   `picture` blob,
   `city` varchar(45) DEFAULT NULL,
   `covid_status` int unsigned DEFAULT '0',
-  `vaccinated` int unsigned DEFAULT '0',
+  `vaccinated` tinyint(1) DEFAULT '0',
+  `nationality` varchar(100) DEFAULT NULL,
+  `preferred_language` varchar(100) DEFAULT NULL,
+  `birthday` varchar(100) DEFAULT NULL,
+  `location` varchar(100) DEFAULT NULL,
+  `ethnicity` varchar(100) DEFAULT NULL,
+  `body_type` varchar(100) DEFAULT NULL,
+  `height` varchar(100) DEFAULT NULL,
+  `weight` varchar(100) DEFAULT NULL,
+  `hair_color` varchar(100) DEFAULT NULL,
+  `eye_color` varchar(100) DEFAULT NULL,
+  `longitude` decimal(10,7) DEFAULT NULL,
+  `latitude` decimal(10,7) DEFAULT NULL,
+  PRIMARY KEY (`user_id`),
+  CONSTRAINT `fk_profile_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`_uid`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- `SSE-dating-app`.user_hobby definition
+
+CREATE TABLE `user_hobby` (
+  `user_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `sport` tinyint(1) DEFAULT '0' COMMENT '0: false, 1: true',
+  `movie` tinyint(1) DEFAULT '0',
+  `reading` tinyint(1) DEFAULT '0',
+  `dancing` tinyint(1) DEFAULT '0',
+  `music` tinyint(1) DEFAULT '0',
+  KEY `fk_hobby_id_idx` (`user_id`),
+  CONSTRAINT `fk_hobby_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`_uid`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- `SSE-dating-app`.my_like definition
+
+CREATE TABLE `my_like` (
+  `from_id` char(36) NOT NULL,
+  `to_id` char(36) NOT NULL,
+  `like_status` bigint NOT NULL,
+  UNIQUE KEY `my_like_UN` (`from_id`,`to_id`),
+  KEY `fk_like_id_1_idx` (`from_id`),
+  KEY `fk_like_id_2_idx` (`to_id`),
+  CONSTRAINT `fk_like_id_1` FOREIGN KEY (`from_id`) REFERENCES `user` (`_uid`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `fk_like_id_2` FOREIGN KEY (`to_id`) REFERENCES `user` (`_uid`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- `SSE-dating-app`.`date` definition
+
+CREATE TABLE `date` (
+  `_uid` char(36) NOT NULL,
+  `from_id` char(36) NOT NULL,
+  `to_id` char(36) NOT NULL,
+  `date` varchar(26) NOT NULL,
+  `location` varchar(45) NOT NULL,
+  `mask_required` int unsigned NOT NULL,
+  `state` int unsigned NOT NULL COMMENT '0: pending, 1: accepted, 2: rejected, 3: canceled',
   `updated_at` datetime NOT NULL,
   `created_at` datetime NOT NULL,
-  PRIMARY KEY (`users_id`),
-  CONSTRAINT `fk_profile_id` FOREIGN KEY (`users_id`) REFERENCES `user` (`_uid`) ON DELETE CASCADE ON UPDATE RESTRICT
+  `city` varchar(100) NOT NULL,
+  PRIMARY KEY (`_uid`),
+  KEY `fk_date_id_1_idx` (`from_id`),
+  KEY `fk_date_id_2_idx` (`to_id`),
+  CONSTRAINT `fk_date_id_1` FOREIGN KEY (`from_id`) REFERENCES `user` (`_uid`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `fk_date_id_2` FOREIGN KEY (`to_id`) REFERENCES `user` (`_uid`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `user_profile`
---
 
-LOCK TABLES `user_profile` WRITE;
-/*!40000 ALTER TABLE `user_profile` DISABLE KEYS */;
-INSERT INTO `user_profile` VALUES ('3491870103568384',NULL,NULL,NULL,NULL,NULL,NULL,0,0,'2022-10-08 16:40:31','2022-10-08 16:40:31');
-/*!40000 ALTER TABLE `user_profile` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+INSERT INTO `SSE-dating-app`.`user` (`_uid`,username,password,created_at,updated_at,email) VALUES
+	 ('3491870103568384','Mike','4QrcOUm6Wau+VuBX8g+IPg==','2022-10-08 16:40:31','2022-10-08 16:40:31','12345@outlook.com'),
+	 ('3494006870769664','Jack','dage','2022-10-20 11:42:01','2022-10-20 11:42:01','12345@outlook.com'),
+	 ('3494007225188352','Alice','age','2022-10-20 11:44:50','2022-10-20 11:44:50','12345@outlook.com'),
+	 ('3494007753670656','Bob','age','2022-10-20 11:49:02','2022-10-20 11:49:02','12345@outlook.com'),
+	 ('3494010492551168','Alex','aefgw','2022-10-20 12:10:49','2022-10-20 12:10:49','12345@outlook.com'),
+	 ('3496574525112320','DZJ','4QrcOUm6Wau+VuBX8g+IPg==','2022-11-03 15:47:55','2022-11-03 15:47:55','jack.z.deng@outlook.com');
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+INSERT INTO `SSE-dating-app`.user_profile (user_id,first_name,last_name,age,gender,picture,city,covid_status,vaccinated,nationality,preferred_language,birthday,location,ethnicity,body_type,height,weight,hair_color,eye_color,longitude,latitude) VALUES
+	 ('3491870103568384','Mike123','awfweafafaweffawf',26,0,NULL,NULL,2,1,'','','2011-01-11','Adelaide SA, Australia','awefwefwef','thinfawef','100','160','','',138.6007456,-34.9284989),
+	 ('3494006870769664','awefaef','UOA-Ysuites',20,1,NULL,NULL,2,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+	 ('3494007225188352','aeg','UOA-Ysuites',18,1,NULL,NULL,2,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+	 ('3494007753670656','aeg','UOA-Ysuites',18,1,NULL,NULL,2,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+	 ('3494010492551168','faewfaf','UOA-Ysuites',18,1,NULL,NULL,2,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
--- Dump completed on 2022-10-10 12:48:26
+INSERT INTO `SSE-dating-app`.user_hobby (user_id,sport,movie,reading,dancing,music) VALUES
+	 ('3491870103568384',0,1,1,1,1);
+
+
+INSERT INTO `SSE-dating-app`.`date` (`_uid`,from_id,to_id,`date`,location,mask_required,state,updated_at,created_at,city) VALUES
+	 ('3495708229369856','3491870103568384','3494006870769664','2022/Oct/29/21','aefaef',1,3,'2022-10-29 21:03:13','2022-10-29 21:03:13','gfawe'),
+	 ('3495708814475264','3491870103568384','3494007225188352','2022/Oct/29/21','awefawf',1,3,'2022-10-29 21:07:51','2022-10-29 21:07:51','afawef'),
+	 ('3495708919332864','3494007225188352','3491870103568384','2022/Oct/29/21','aefa',1,2,'2022-10-29 21:08:42','2022-10-29 21:08:42','aefa'),
+	 ('3496533146206208','3491870103568384','3494006870769664','','',1,0,'2022-11-03 10:19:03','2022-11-03 10:19:03',''),
+	 ('3496533156691968','3491870103568384','3494006870769664','','',0,0,'2022-11-03 10:19:08','2022-11-03 10:19:08',''),
+	 ('3496540956000256','3491870103568384','3494010492551168','','',0,0,'2022-11-03 11:21:08','2022-11-03 11:21:08',''),
+	 ('3496541102800896','3491870103568384','3494010492551168','','',0,0,'2022-11-03 11:22:17','2022-11-03 11:22:17',''),
+	 ('3496541211852800','3491870103568384','3494010492551168','','',0,0,'2022-11-03 11:23:10','2022-11-03 11:23:10',''),
+	 ('3496541396402176','3491870103568384','3494010492551168','','',0,0,'2022-11-03 11:24:37','2022-11-03 11:24:37',''),
+	 ('3496541893427200','3491870103568384','3494010492551168','','',0,0,'2022-11-03 11:28:34','2022-11-03 11:28:34','');
+
+INSERT INTO `SSE-dating-app`.`date` (`_uid`,from_id,to_id,`date`,location,mask_required,state,updated_at,created_at,city) VALUES
+	 ('3496541939564544','3491870103568384','3494010492551168','','',0,0,'2022-11-03 11:28:57','2022-11-03 11:28:57',''),
+	 ('3496542063296512','3491870103568384','3494010492551168','2022/Nov/03/00','afwef',1,0,'2022-11-03 11:29:56','2022-11-03 11:29:56','afawe');
+
+
+INSERT INTO `SSE-dating-app`.my_like (from_id,to_id,like_status) VALUES
+	 ('3491870103568384','3494006870769664',1),
+	 ('3491870103568384','3494007225188352',2),
+	 ('3491870103568384','3494007753670656',0),
+	 ('3491870103568384','3494010492551168',1);
+
+
+
