@@ -24,7 +24,8 @@ module.exports = app => {
   router.post('/login/signup/code', controller.login.signup_verify);
   router.post('/login/login', controller.login.usernamePasswordCheck);
   router.post('/login/verify', controller.login.verificationCheck);
-  router.get('/login/code', controller.login.updateLoginCode);
+  router.get('/login/code', controller.login.updateLoginCode)
+  router.get('/login/logout', controller.login.logout);
 
   /* Get user list */
   router.get('/search-mate', controller.userList.getUserListInSearchMate);

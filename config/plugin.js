@@ -25,5 +25,5 @@ module.exports = {
   bcrypt: {
     enable: true,
     package: 'egg-bcrypt',
-  },
+  }
 };

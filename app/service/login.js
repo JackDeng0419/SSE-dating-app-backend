@@ -88,7 +88,7 @@ class LoginService extends Service {
       await transaction.insert('user_hobby', new_user_hobby_obj);
       await transaction.commit();
 
-      return new_user_obj.username;
+      return _uid;
     } catch (error) {
       console.log('errrrrrrrrrrrrr', error);
       return null;
