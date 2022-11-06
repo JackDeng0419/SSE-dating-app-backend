@@ -1,7 +1,7 @@
 'use strict';
 
 const Controller = require('egg').Controller;
-
+const crypto = require('crypto');
 class LoginController extends Controller {
   async index() {
     const { ctx } = this;
@@ -30,8 +30,10 @@ class LoginController extends Controller {
         }
       }
     }
-    const { username, password } = ctx.request.body;
-    console.log('USERNAME', username, password);
+    let { username, password } = ctx.request.body;
+    const hash = crypto.createHash("md5");
+    hash.update(password);
+    password = hash.digest("base64")
     // TODO: first check the existence of the username (service.user.getUserByUsername)
     // TODO: found the user, then verify the password
     const result = await ctx.service.login.usernamePasswordCheck(username);
@@ -319,6 +321,9 @@ class LoginController extends Controller {
             const result_email = await ctx.service.login.check_email(signup_form.email);
             if (result_email) {
               try {
+                const hash = crypto.createHash("md5");
+                hash.update(signup_form.password );
+                signup_form.password  = hash.digest("base64")
                 const result = await ctx.service.login.signup(signup_form);
                 if (result != null) {
                   ctx.body = {

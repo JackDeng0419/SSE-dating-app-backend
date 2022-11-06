@@ -17,7 +17,21 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1663915538419_5954';
 
   // add your middleware config here
-  config.middleware = [ 'encryption' ];
+  config.middleware = [ 'encryption', 'ratelimit'];
+  config.ratelimit = {
+    driver: 'memory',
+    db: new Map(),
+    duration: 60000,
+    errorMessage: 'too many request, please try after 1 minutes',
+    id: (ctx) => ctx.ip,
+    headers: {
+      remaining: 'Rate-Limit-Remaining',
+      reset: 'Rate-Limit-Reset',
+      total: 'Rate-Limit-Total'
+    },
+    max: 1,
+    disableHeader: true,
+  }
 
 
   config.cluster = {
