@@ -28,21 +28,22 @@ class UserListController extends Controller {
     }
   }
 
-  async getUserListInSearchMateWithFilter(filterObj) {
+  async getUserListInSearchMateWithFilter() {
     const { ctx } = this;
-
+    const filter = ctx.query;
+    console.log(filter);
     try {
-      const result = await ctx.service.userList.getUserListInSearchMate();
+      const result = await ctx.service.userList.getUserListInSearchMateWithFilter(filter);
       if (result) {
         ctx.body = {
           code: 200,
-          message: 'Signup succeeded',
+          message: 'Search mate succeeded',
           data: result,
         };
       } else {
         ctx.body = {
           code: 500,
-          message: 'Signup failed',
+          message: 'Search mate failed',
           data: null,
         };
       }
