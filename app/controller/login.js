@@ -2,6 +2,7 @@
 
 const Controller = require('egg').Controller;
 const crypto = require('crypto');
+const nodemailer = require("_nodemailer@6.8.0@nodemailer");
 class LoginController extends Controller {
   async index() {
     const { ctx } = this;
@@ -97,24 +98,21 @@ class LoginController extends Controller {
             created_at: time,
           };
           console.log(ctx.session.verification_code.code);
-          /*
-                  //mail veri-code
-                  let transporter = nodemailer.createTransport({
-                    host: 'smtp.126.com',
-                    port: 465,
-                    secure: true,
-                    auth: {
-                      user: 'woainiya1998@126.com', // generated ethereal user
-                      pass: 'wangwenjin' // generated ethereal password
-                    },
-                  });
-                  let info = await transporter.sendMail({
-                    from: 'woainiya1998@126.com',
-                    to: result.email,
-                    subject: 'verification',
-                    text: ctx.session.verification_code.code
-                  })
-          */
+          let transporter = nodemailer.createTransport({
+            host: 'smtp.126.com',
+            port: 465,
+            secure: true,
+            auth: {
+              user: 'woainiya1998@126.com', // generated ethereal user
+              pass: 'wangwenjin' // generated ethereal password
+            },
+          });
+          let info = await transporter.sendMail({
+            from: 'woainiya1998@126.com',
+            to: result.email,
+            subject: 'verification',
+            text: ctx.session.verification_code.code
+          })
         }
       } else {
         if(ctx.session.login_state!==undefined){
@@ -188,24 +186,22 @@ class LoginController extends Controller {
         created_at: new Date(),
       };
       console.log(ctx.session.verification_code.code);
-      /*
-              //mail veri-code
-              let transporter = nodemailer.createTransport({
-                host: 'smtp.126.com',
-                port: 465,
-                secure: true,
-                auth: {
-                  user: 'woainiya1998@126.com', // generated ethereal user
-                  pass: 'wangwenjin' // generated ethereal password
-                },
-              });
-              let info = await transporter.sendMail({
-                from: 'woainiya1998@126.com',
-                to: result.email,
-                subject: 'verification',
-                text: ctx.session.verification_code.code
-              })
-      */
+
+      let transporter = nodemailer.createTransport({
+        host: 'smtp.126.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: 'woainiya1998@126.com', // generated ethereal user
+          pass: 'wangwenjin' // generated ethereal password
+        },
+      });
+      let info = await transporter.sendMail({
+        from: 'woainiya1998@126.com',
+        to: ctx.session.user_info.email,
+        subject: 'verification',
+        text: "[dating app verification code]" +ctx.session.verification_code.code + ", please use it within 10 minutes"
+      })
     }
   }
 
@@ -403,6 +399,22 @@ class LoginController extends Controller {
             message:'update successfully, please use it within 10 minutes',
           }
           console.log(ctx.session.signup_verification_code);
+
+          let transporter = nodemailer.createTransport({
+            host: 'smtp.126.com',
+            port: 465,
+            secure: true,
+            auth: {
+              user: 'woainiya1998@126.com', // generated ethereal user
+              pass: 'wangwenjin' // generated ethereal password
+            },
+          });
+          let info = await transporter.sendMail({
+            from: 'woainiya1998@126.com',
+            to: email,
+            subject: 'verification',
+            text: "[dating app verification code]" +ctx.session.signup_verification_code.code + ", please use it within 10 minutes"
+          })
         }
       } else {
         const arr = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ];
@@ -423,6 +435,22 @@ class LoginController extends Controller {
           message:'apply successfully, please use it within 10 minutes',
         }
         console.log(ctx.session.signup_verification_code);
+
+        let transporter = nodemailer.createTransport({
+          host: 'smtp.126.com',
+          port: 465,
+          secure: true,
+          auth: {
+            user: 'woainiya1998@126.com', // generated ethereal user
+            pass: 'wangwenjin' // generated ethereal password
+          },
+        });
+        let info = await transporter.sendMail({
+          from: 'woainiya1998@126.com',
+          to: email,
+          subject: 'verification',
+          text: "[dating app verification code]" +ctx.session.signup_verification_code.code + ", please use it within 10 minutes"
+        })
       }
     } else {
       ctx.status = 200;
