@@ -22,3 +22,5 @@
 5. Please make sure your node.js version is v.14.20.1
 6. Make sure port:7001 is not in used
 6. Run `npm run dev` to start the server, the backend will be running in http://localhost:7001
+7. Because this application uses self-signed HTTPS SSL certificate, so you need to manually trust this domain by first request: `https://localhost:7001/login/RSA` on the browser.
+8. After trust the domain, you can request `https://localhost:8080/login` to start using the dating application
