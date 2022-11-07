@@ -88,48 +88,11 @@ CREATE TABLE `date` (
   CONSTRAINT `fk_date_id_2` FOREIGN KEY (`to_id`) REFERENCES `user` (`_uid`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-
+-- Insert the test user accounts
 INSERT INTO `SSE-dating-app`.`user` (`_uid`,username,password,created_at,updated_at,email) VALUES
-	 ('3491870103568384','Mike','4QrcOUm6Wau+VuBX8g+IPg==','2022-10-08 16:40:31','2022-10-08 16:40:31','12345@outlook.com'),
-	 ('3494006870769664','Jack','dage','2022-10-20 11:42:01','2022-10-20 11:42:01','12345@outlook.com'),
-	 ('3494007225188352','Alice','age','2022-10-20 11:44:50','2022-10-20 11:44:50','12345@outlook.com'),
-	 ('3494007753670656','Bob','age','2022-10-20 11:49:02','2022-10-20 11:49:02','12345@outlook.com'),
-	 ('3494010492551168','Alex','aefgw','2022-10-20 12:10:49','2022-10-20 12:10:49','12345@outlook.com'),
-	 ('3496574525112320','DZJ','4QrcOUm6Wau+VuBX8g+IPg==','2022-11-03 15:47:55','2022-11-03 15:47:55','jack.z.deng@outlook.com');
-
-INSERT INTO `SSE-dating-app`.user_profile (user_id,first_name,last_name,age,gender,picture,city,covid_status,vaccinated,nationality,preferred_language,birthday,location,ethnicity,body_type,height,weight,hair_color,eye_color,longitude,latitude) VALUES
-	 ('3491870103568384','Mike123','awfweafafaweffawf',26,0,NULL,NULL,2,1,'','','2011-01-11','Adelaide SA, Australia','awefwefwef','thinfawef','100','160','','',138.6007456,-34.9284989),
-	 ('3494006870769664','awefaef','UOA-Ysuites',20,1,NULL,NULL,2,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
-	 ('3494007225188352','aeg','UOA-Ysuites',18,1,NULL,NULL,2,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
-	 ('3494007753670656','aeg','UOA-Ysuites',18,1,NULL,NULL,2,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
-	 ('3494010492551168','faewfaf','UOA-Ysuites',18,1,NULL,NULL,2,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-
-INSERT INTO `SSE-dating-app`.user_hobby (user_id,sport,movie,reading,dancing,music) VALUES
-	 ('3491870103568384',0,1,1,1,1);
-
-
-INSERT INTO `SSE-dating-app`.`date` (`_uid`,from_id,to_id,`date`,location,mask_required,state,updated_at,created_at,city) VALUES
-	 ('3495708229369856','3491870103568384','3494006870769664','2022/Oct/29/21','aefaef',1,3,'2022-10-29 21:03:13','2022-10-29 21:03:13','gfawe'),
-	 ('3495708814475264','3491870103568384','3494007225188352','2022/Oct/29/21','awefawf',1,3,'2022-10-29 21:07:51','2022-10-29 21:07:51','afawef'),
-	 ('3495708919332864','3494007225188352','3491870103568384','2022/Oct/29/21','aefa',1,2,'2022-10-29 21:08:42','2022-10-29 21:08:42','aefa'),
-	 ('3496533146206208','3491870103568384','3494006870769664','','',1,0,'2022-11-03 10:19:03','2022-11-03 10:19:03',''),
-	 ('3496533156691968','3491870103568384','3494006870769664','','',0,0,'2022-11-03 10:19:08','2022-11-03 10:19:08',''),
-	 ('3496540956000256','3491870103568384','3494010492551168','','',0,0,'2022-11-03 11:21:08','2022-11-03 11:21:08',''),
-	 ('3496541102800896','3491870103568384','3494010492551168','','',0,0,'2022-11-03 11:22:17','2022-11-03 11:22:17',''),
-	 ('3496541211852800','3491870103568384','3494010492551168','','',0,0,'2022-11-03 11:23:10','2022-11-03 11:23:10',''),
-	 ('3496541396402176','3491870103568384','3494010492551168','','',0,0,'2022-11-03 11:24:37','2022-11-03 11:24:37',''),
-	 ('3496541893427200','3491870103568384','3494010492551168','','',0,0,'2022-11-03 11:28:34','2022-11-03 11:28:34','');
-
-INSERT INTO `SSE-dating-app`.`date` (`_uid`,from_id,to_id,`date`,location,mask_required,state,updated_at,created_at,city) VALUES
-	 ('3496541939564544','3491870103568384','3494010492551168','','',0,0,'2022-11-03 11:28:57','2022-11-03 11:28:57',''),
-	 ('3496542063296512','3491870103568384','3494010492551168','2022/Nov/03/00','afwef',1,0,'2022-11-03 11:29:56','2022-11-03 11:29:56','afawe');
-
-
-INSERT INTO `SSE-dating-app`.my_like (from_id,to_id,like_status) VALUES
-	 ('3491870103568384','3494006870769664',1),
-	 ('3491870103568384','3494007225188352',2),
-	 ('3491870103568384','3494007753670656',0),
-	 ('3491870103568384','3494010492551168',1);
+	 ('3497282697691136','Admin1234','3Eg+gKegvZ73HYz5c2c5JA==','2022-11-07 13:35:58','2022-11-07 13:35:58','jack.z.deng@outlook.com'),
+	 ('3497284081811456','ZhengjieDeng','3Eg+gKegvZ73HYz5c2c5JA==','2022-11-07 13:46:58','2022-11-07 13:46:58','a1865926@adelaide.edu.au'),
+	 ('3497285136678912','testuser','3Eg+gKegvZ73HYz5c2c5JA==','2022-11-07 13:55:20','2022-11-07 13:55:20','a1865926@outlook.com');
 
 
 

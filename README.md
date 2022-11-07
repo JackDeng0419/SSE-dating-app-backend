@@ -1,4 +1,5 @@
 # SSE-dating-app-backend
+
 ## QuickStart
 1. Please make sure your MySQL is running and the version should be 8.0.22.
 2. Create a database named `SSE-dating-app` by running: 
@@ -20,7 +21,10 @@
     };
     ```
 5. Please make sure your node.js version is v.14.20.1
+6. Install cnpm globally by running `npm install -g cnpm`
+7. Run `cnpm i`   
 6. Make sure port:7001 is not in used
 6. Run `npm run dev` to start the server, the backend will be running in http://localhost:7001
+    - If module `nodemailer` does not exist, please run `cnpm i nodemailer` 
 7. Because this application uses self-signed HTTPS SSL certificate, so you need to manually trust this domain by first request: `https://localhost:7001/login/RSA` on the browser.
 8. After trust the domain, you can request `https://localhost:8080/login` to start using the dating application
